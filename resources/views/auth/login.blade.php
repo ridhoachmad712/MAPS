@@ -2,6 +2,10 @@
 
 @section('judul', 'Masuk')
 
+@section('robots')
+    <meta name="robots" content="noindex">
+@endsection
+
 @section('konten')
     <div class="mx-auto w-full max-w-4xl px-4 py-12">
         <div class="card grid overflow-hidden lg:grid-cols-2">

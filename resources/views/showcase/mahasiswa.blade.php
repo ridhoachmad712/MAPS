@@ -2,6 +2,29 @@
 
 @section('judul', 'Profil '.$mahasiswa->nama_lengkap)
 
+@section('deskripsi', 'Profil capaian '.$mahasiswa->nama_lengkap.', mahasiswa Manajemen FEB UNM angkatan '.$mahasiswa->angkatan.' — '.$entri->count().' capaian terverifikasi: prestasi, sertifikasi, organisasi, dan lainnya.')
+
+@section('og_type', 'profile')
+
+@if ($mahasiswa->foto)
+    @section('og_image', asset('storage/'.$mahasiswa->foto))
+@endif
+
+@push('head')
+    <script type="application/ld+json">
+        {!! json_encode([
+            '@context' => 'https://schema.org',
+            '@type' => 'Person',
+            'name' => $mahasiswa->nama_lengkap,
+            'url' => route('showcase.mahasiswa', $mahasiswa),
+            'affiliation' => [
+                '@type' => 'CollegeOrUniversity',
+                'name' => 'Program Studi Manajemen, Fakultas Ekonomi dan Bisnis, Universitas Negeri Makassar',
+            ],
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+    </script>
+@endpush
+
 @section('konten')
     <div class="mx-auto max-w-7xl px-4 py-6">
         <nav class="mb-4 text-sm text-slate-500">
@@ -44,28 +67,39 @@
             @endforeach
         </div>
 
-        <h2 class="mb-4 text-lg font-extrabold text-navy-700">Daftar Capaian Terverifikasi</h2>
-        <div class="grid gap-4 md:grid-cols-2">
-            @foreach ($entri as $p)
-                <div class="card card-hover">
-                    <div class="card-body">
-                        <div class="mb-2.5 flex items-start justify-between gap-2">
-                            <span class="badge badge-soft">{{ $p->kategori->nama_kategori }}</span>
-                            <span class="badge badge-level-{{ $p->level }}">{{ $p->levelLabel() }}</span>
-                        </div>
-                        <h3 class="mb-1 font-bold text-navy-700">{{ $p->judul }}</h3>
-                        <div class="text-xs text-slate-500">
-                            {{ $p->penyelenggara ?: 'Penyelenggara tidak dicantumkan' }} · {{ $p->tahun_pencapaian }}
-                        </div>
-                        @if ($p->peran_capaian)
-                            <div class="mt-1.5 text-sm"><i class="bi bi-award text-slate-400"></i> {{ $p->peran_capaian }}</div>
-                        @endif
-                        @if ($p->deskripsi)
-                            <p class="mt-2 text-sm text-slate-500">{{ $p->deskripsi }}</p>
-                        @endif
-                    </div>
+        <h2 class="mb-5 text-lg font-extrabold text-navy-700">Rekam Jejak Capaian Terverifikasi</h2>
+
+        {{-- Dikelompokkan per tahun pencapaian, terbaru dulu --}}
+        @foreach ($entri->groupBy('tahun_pencapaian') as $tahun => $entriTahun)
+            <div class="mb-7">
+                <div class="mb-4 flex items-center gap-3">
+                    <span class="badge badge-navy px-3.5 py-1.5 text-sm">{{ $tahun }}</span>
+                    <span class="text-xs text-slate-400">{{ $entriTahun->count() }} capaian</span>
+                    <span class="h-px flex-1 bg-slate-200"></span>
                 </div>
-            @endforeach
-        </div>
+                <div class="grid gap-4 md:grid-cols-2">
+                    @foreach ($entriTahun as $p)
+                        <div class="card card-hover">
+                            <div class="card-body">
+                                <div class="mb-2.5 flex items-start justify-between gap-2">
+                                    <span class="badge badge-soft">{{ $p->kategori->nama_kategori }}</span>
+                                    <span class="badge badge-level-{{ $p->level }}">{{ $p->levelLabel() }}</span>
+                                </div>
+                                <h3 class="mb-1 font-bold text-navy-700">{{ $p->judul }}</h3>
+                                <div class="text-xs text-slate-500">
+                                    {{ $p->penyelenggara ?: 'Penyelenggara tidak dicantumkan' }}
+                                </div>
+                                @if ($p->peran_capaian)
+                                    <div class="mt-1.5 text-sm"><i class="bi bi-award text-slate-400"></i> {{ $p->peran_capaian }}</div>
+                                @endif
+                                @if ($p->deskripsi)
+                                    <p class="mt-2 text-sm text-slate-500">{{ $p->deskripsi }}</p>
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endforeach
     </div>
 @endsection

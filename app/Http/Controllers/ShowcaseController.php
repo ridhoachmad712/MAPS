@@ -78,8 +78,31 @@ class ShowcaseController extends Controller
             ->orderBy('tahun_pencapaian')
             ->pluck('total', 'tahun_pencapaian');
 
+        // Sorotan & galeri hanya tampil di beranda tanpa filter
+        $tanpaFilter = ! $request->hasAny(['q', 'kategori', 'level', 'tahun', 'angkatan', 'urut', 'page']);
+
+        $sorotan = $tanpaFilter
+            ? Portofolio::publik()
+                ->with(['mahasiswa', 'kategori'])
+                ->whereIn('level', ['internasional', 'nasional'])
+                ->orderByRaw("FIELD(level, 'internasional', 'nasional')")
+                ->orderByDesc('tahun_pencapaian')
+                ->take(3)
+                ->get()
+            : collect();
+
+        $mahasiswaTop = $tanpaFilter
+            ? Mahasiswa::where('konsen_publik', true)
+                ->withCount(['portofolio as total_publik' => fn ($q) => $q->publik()])
+                ->having('total_publik', '>', 0)
+                ->orderByDesc('total_publik')
+                ->take(6)
+                ->get()
+            : collect();
+
         return view('showcase.index', compact(
             'entri', 'kategori', 'daftarTahun', 'daftarAngkatan', 'statistik', 'perAngkatan', 'trenTahun',
+            'sorotan', 'mahasiswaTop',
         ));
     }
 

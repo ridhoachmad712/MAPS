@@ -4,8 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    @php
+        $deskripsiBawaan = 'MAPS — arsip dan showcase portofolio capaian mahasiswa Program Studi Manajemen, Fakultas Ekonomi dan Bisnis, Universitas Negeri Makassar.';
+    @endphp
     <title>@yield('judul', 'MAPS') — MAPS Prodi Manajemen FEB UNM</title>
-    <meta name="description" content="MAPS — arsip dan showcase portofolio capaian mahasiswa Program Studi Manajemen FEB Universitas Negeri Makassar.">
+    <meta name="description" content="@yield('deskripsi', $deskripsiBawaan)">
+    @yield('robots')
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    {{-- Open Graph & Twitter Card — tautan yang dibagikan tampil rapi --}}
+    <meta property="og:type" content="@yield('og_type', 'website')">
+    <meta property="og:site_name" content="MAPS Prodi Manajemen FEB UNM">
+    <meta property="og:title" content="@yield('judul', 'MAPS') — MAPS Prodi Manajemen FEB UNM">
+    <meta property="og:description" content="@yield('deskripsi', $deskripsiBawaan)">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:image" content="@yield('og_image', asset('favicon.svg'))">
+    <meta name="twitter:card" content="summary">
+
+    @stack('head')
     <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])

@@ -2,6 +2,24 @@
 
 @section('judul', 'Data Capaian Mahasiswa')
 
+@section('deskripsi', $statistik['total_capaian'].' capaian terverifikasi dari '.$statistik['mahasiswa_berprestasi'].' mahasiswa berprestasi Prodi Manajemen FEB UNM — prestasi, PKM, organisasi, MBKM, sertifikasi, dan publikasi.')
+
+@push('head')
+    <script type="application/ld+json">
+        {!! json_encode([
+            '@context' => 'https://schema.org',
+            '@type' => 'WebSite',
+            'name' => 'MAPS — Data Capaian Mahasiswa Prodi Manajemen FEB UNM',
+            'url' => route('showcase.index'),
+            'potentialAction' => [
+                '@type' => 'SearchAction',
+                'target' => route('showcase.index').'?q={search_term_string}',
+                'query-input' => 'required name=search_term_string',
+            ],
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+    </script>
+@endpush
+
 @php
     $filterAktif = collect([
         'q' => request('q') ? 'Cari: "'.request('q').'"' : null,
@@ -63,7 +81,74 @@
         </div>
     </section>
 
+    {{-- Sorotan: capaian internasional & nasional terbaru --}}
+    @if ($sorotan->isNotEmpty())
+        <section class="mx-auto max-w-7xl px-4 pt-10 sm:px-6 lg:px-8">
+            <h2 class="text-xl font-bold text-gray-900 sm:text-2xl">Sorotan Capaian</h2>
+            <p class="mt-1 text-sm text-gray-600">Capaian tingkat internasional dan nasional terbaru.</p>
+            <div class="mt-5 grid gap-4 md:grid-cols-3">
+                @foreach ($sorotan as $p)
+                    <a href="{{ route('showcase.mahasiswa', $p->mahasiswa) }}" class="card card-hover flex flex-col p-5">
+                        <div class="mb-3 flex flex-wrap items-center gap-1.5">
+                            <span class="badge badge-level-{{ $p->level }}">{{ $p->levelLabel() }}</span>
+                            <span class="badge badge-soft">{{ $p->kategori->nama_kategori }}</span>
+                        </div>
+                        <h3 class="font-bold leading-snug text-navy-600">{{ $p->judul }}</h3>
+                        <div class="mt-1.5 text-xs text-gray-500">
+                            {{ $p->penyelenggara ?: 'Penyelenggara tidak dicantumkan' }} · {{ $p->tahun_pencapaian }}
+                        </div>
+                        @if ($p->peran_capaian)
+                            <div class="mt-1.5 text-sm text-gray-700"><i class="bi bi-award text-gray-400"></i> {{ $p->peran_capaian }}</div>
+                        @endif
+                        <div class="mt-auto flex items-center gap-2.5 border-t border-gray-100 pt-3.5">
+                            @if ($p->mahasiswa->foto)
+                                <img src="{{ asset('storage/'.$p->mahasiswa->foto) }}" alt="" class="h-9 w-9 rounded-full object-cover">
+                            @else
+                                <span class="flex h-9 w-9 items-center justify-center rounded-full bg-navy-50 text-sm font-bold text-navy-600">
+                                    {{ strtoupper(substr($p->mahasiswa->nama_lengkap, 0, 1)) }}
+                                </span>
+                            @endif
+                            <span class="min-w-0">
+                                <span class="block truncate text-sm font-semibold text-gray-900">{{ $p->mahasiswa->nama_lengkap }}</span>
+                                <span class="block text-xs text-gray-500">Angkatan {{ $p->mahasiswa->angkatan }}</span>
+                            </span>
+                        </div>
+                    </a>
+                @endforeach
+            </div>
+        </section>
+    @endif
+
+    {{-- Galeri mahasiswa berprestasi --}}
+    @if ($mahasiswaTop->isNotEmpty())
+        <section class="mx-auto max-w-7xl px-4 pt-10 sm:px-6 lg:px-8">
+            <h2 class="text-xl font-bold text-gray-900 sm:text-2xl">Mahasiswa Berprestasi</h2>
+            <p class="mt-1 text-sm text-gray-600">Dengan capaian terverifikasi terbanyak yang tampil di halaman publik.</p>
+            <div class="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+                @foreach ($mahasiswaTop as $m)
+                    <a href="{{ route('showcase.mahasiswa', $m) }}" class="card card-hover p-5 text-center">
+                        @if ($m->foto)
+                            <img src="{{ asset('storage/'.$m->foto) }}" alt="Foto {{ $m->nama_lengkap }}"
+                                 class="mx-auto h-16 w-16 rounded-full object-cover">
+                        @else
+                            <span class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-navy-50 text-xl font-bold text-navy-600">
+                                {{ strtoupper(substr($m->nama_lengkap, 0, 1)) }}
+                            </span>
+                        @endif
+                        <div class="mt-3 truncate text-sm font-semibold text-gray-900" title="{{ $m->nama_lengkap }}">{{ $m->nama_lengkap }}</div>
+                        <div class="text-xs text-gray-500">Angkatan {{ $m->angkatan }}</div>
+                        <span class="badge badge-primary mt-2.5">{{ $m->total_publik }} capaian</span>
+                    </a>
+                @endforeach
+            </div>
+        </section>
+    @endif
+
     <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        @if ($sorotan->isNotEmpty() || $mahasiswaTop->isNotEmpty())
+            <h2 class="mb-1 text-xl font-bold text-gray-900 sm:text-2xl">Jelajahi Seluruh Data</h2>
+            <p class="mb-5 text-sm text-gray-600">Saring berdasarkan kategori, level, tahun, atau angkatan — seluruh angka dihitung otomatis dari entri terverifikasi.</p>
+        @endif
         <div class="grid gap-5 lg:grid-cols-12">
 
             {{-- Panel filter kiri (sticky, dapat dilipat di layar sempit) --}}

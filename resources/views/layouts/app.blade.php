@@ -1,5 +1,10 @@
 @extends('layouts.base')
 
+{{-- Halaman internal tidak perlu diindeks mesin pencari --}}
+@section('robots')
+    <meta name="robots" content="noindex">
+@endsection
+
 @section('navbar')
     <nav class="navbar-maps" x-data="{ menu: false }">
         <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-3">

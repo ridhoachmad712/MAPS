@@ -1,4 +1,4 @@
-@extends('layouts.publik')
+@extends('layouts.base')
 
 @section('judul', 'Masuk')
 
@@ -6,8 +6,17 @@
     <meta name="robots" content="noindex">
 @endsection
 
-@section('konten')
-    <div class="container-xl py-5" style="max-width: 56rem;">
+{{-- Halaman masuk berdiri sendiri: tanpa navbar dan footer --}}
+@section('tanpa_footer', '1')
+
+@section('isi')
+    <div class="container-xl d-flex flex-column justify-content-center py-4" style="max-width: 56rem; min-height: 100vh;">
+        <p class="mb-3">
+            <a href="{{ route('showcase.index') }}" class="link-secondary">
+                <i class="bi bi-arrow-left me-1"></i>Kembali ke beranda
+            </a>
+        </p>
+
         <div class="card overflow-hidden">
             <div class="row g-0">
 

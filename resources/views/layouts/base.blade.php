@@ -43,7 +43,9 @@
                 @yield('isi')
             </main>
 
-            {{-- Footer tiga kolom (warna & isi dari pengaturan) --}}
+            {{-- Footer tiga kolom (warna & isi dari pengaturan) — halaman dapat mematikannya lewat @section('tanpa_footer', '1') --}}
+            @hasSection('tanpa_footer')
+            @else
             <footer class="footer footer-maps d-print-none" data-bs-theme="{{ $footerTerang ? 'light' : 'dark' }}">
                 <div class="container-xl">
                     <div class="row gy-4 py-3">
@@ -92,6 +94,7 @@
                     </div>
                 </div>
             </footer>
+            @endif
         </div>
     </div>
 

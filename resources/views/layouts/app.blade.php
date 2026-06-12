@@ -5,6 +5,9 @@
     <meta name="robots" content="noindex">
 @endsection
 
+{{-- Footer showcase hanya untuk halaman publik --}}
+@section('tanpa_footer', '1')
+
 @php
     $navbarTerang = \App\Support\PaletWarna::terang(\App\Models\Setting::get('warna_navbar'));
     $dataMasterAktif = request()->routeIs('admin.mahasiswa.*', 'admin.kategori.*', 'admin.pengguna.*', 'admin.pengaturan.*');

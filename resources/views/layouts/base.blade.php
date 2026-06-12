@@ -5,26 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @php
-        $deskripsiBawaan = 'MAPS — arsip dan showcase portofolio capaian mahasiswa Program Studi Manajemen, Fakultas Ekonomi dan Bisnis, Universitas Negeri Makassar.';
+        $namaAplikasi = \App\Models\Setting::get('nama_aplikasi');
+        $namaPemilik = \App\Models\Setting::get('nama_pemilik');
+        $logoAplikasi = \App\Models\Setting::get('logo');
+        $deskripsiBawaan = $namaAplikasi.' — arsip dan showcase portofolio capaian mahasiswa '.$namaPemilik.', Universitas Negeri Makassar.';
     @endphp
-    <title>@yield('judul', 'MAPS') — MAPS Prodi Manajemen FEB UNM</title>
+    <title>@yield('judul', $namaAplikasi) — {{ $namaAplikasi }} {{ $namaPemilik }}</title>
     <meta name="description" content="@yield('deskripsi', $deskripsiBawaan)">
     @yield('robots')
     <link rel="canonical" href="{{ url()->current() }}">
 
     {{-- Open Graph & Twitter Card — tautan yang dibagikan tampil rapi --}}
     <meta property="og:type" content="@yield('og_type', 'website')">
-    <meta property="og:site_name" content="MAPS Prodi Manajemen FEB UNM">
-    <meta property="og:title" content="@yield('judul', 'MAPS') — MAPS Prodi Manajemen FEB UNM">
+    <meta property="og:site_name" content="{{ $namaAplikasi }} {{ $namaPemilik }}">
+    <meta property="og:title" content="@yield('judul', $namaAplikasi) — {{ $namaAplikasi }} {{ $namaPemilik }}">
     <meta property="og:description" content="@yield('deskripsi', $deskripsiBawaan)">
     <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:image" content="@yield('og_image', asset('favicon.svg'))">
+    <meta property="og:image" content="@yield('og_image', $logoAplikasi ? asset('storage/'.$logoAplikasi) : asset('favicon.svg'))">
     <meta name="twitter:card" content="summary">
 
     @stack('head')
-    <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @include('partials.tema')
     @stack('css')
 </head>
 <body class="flex min-h-screen flex-col font-sans text-gray-900 antialiased">
@@ -50,44 +53,50 @@
         <i class="bi bi-chevron-up block text-lg leading-none"></i>
     </button>
 
-    {{-- Footer gelap tiga kolom --}}
-    <footer class="mt-16 bg-gray-900 text-gray-300">
+    {{-- Footer tiga kolom (warna & isi dari pengaturan) --}}
+    <footer class="footer-maps mt-16">
         <div class="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:grid-cols-2 sm:px-6 lg:grid-cols-3 lg:px-8">
             <div>
                 <div class="flex items-center gap-3">
-                    <img src="{{ asset('favicon.svg') }}" alt="Logo MAPS" class="h-10 w-10 rounded-lg">
-                    <span class="text-base font-bold text-white">MAPS</span>
+                    <img src="{{ $logoAplikasi ? asset('storage/'.$logoAplikasi) : asset('favicon.svg') }}" alt="Logo {{ $namaAplikasi }}" class="h-10 w-10 rounded-lg object-contain">
+                    <span class="footer-judul text-base font-bold">{{ $namaAplikasi }}</span>
                 </div>
                 <p class="mt-4 text-sm leading-relaxed">
-                    Management Student Achievement Portfolio System — arsip dan showcase
-                    portofolio capaian mahasiswa Prodi Manajemen FEB UNM.
+                    {{ \App\Models\Setting::get('footer_deskripsi') }}
                 </p>
             </div>
             <div>
-                <h3 class="text-sm font-semibold uppercase tracking-wider text-white">Tautan</h3>
+                <h3 class="footer-judul text-sm font-semibold uppercase tracking-wider">Tautan</h3>
                 <ul class="mt-4 space-y-2 text-sm">
-                    <li><a href="{{ route('showcase.index') }}" class="hover:text-navy-200">Beranda</a></li>
-                    <li><a href="{{ route('showcase.capaian') }}" class="hover:text-navy-200">Capaian</a></li>
-                    <li><a href="{{ route('showcase.mahasiswa.indeks') }}" class="hover:text-navy-200">Mahasiswa</a></li>
-                    <li><a href="{{ route('showcase.statistik') }}" class="hover:text-navy-200">Statistik</a></li>
-                    <li><a href="{{ route('showcase.tentang') }}" class="hover:text-navy-200">Tentang</a></li>
+                    <li><a href="{{ route('showcase.index') }}" class="footer-tautan">Beranda</a></li>
+                    <li><a href="{{ route('showcase.capaian') }}" class="footer-tautan">Capaian</a></li>
+                    <li><a href="{{ route('showcase.mahasiswa.indeks') }}" class="footer-tautan">Mahasiswa</a></li>
+                    <li><a href="{{ route('showcase.statistik') }}" class="footer-tautan">Statistik</a></li>
+                    <li><a href="{{ route('showcase.tentang') }}" class="footer-tautan">Tentang</a></li>
                     @auth
-                        <li><a href="{{ route('dashboard') }}" class="hover:text-navy-200">Dasbor</a></li>
+                        <li><a href="{{ route('dashboard') }}" class="footer-tautan">Dasbor</a></li>
                     @else
-                        <li><a href="{{ route('login') }}" class="hover:text-navy-200">Masuk</a></li>
+                        <li><a href="{{ route('login') }}" class="footer-tautan">Masuk</a></li>
                     @endauth
                 </ul>
             </div>
             <div>
-                <h3 class="text-sm font-semibold uppercase tracking-wider text-white">Kontak</h3>
+                <h3 class="footer-judul text-sm font-semibold uppercase tracking-wider">Kontak</h3>
                 <ul class="mt-4 space-y-2 text-sm leading-relaxed">
-                    <li>Program Studi Manajemen, Fakultas Ekonomi dan Bisnis</li>
-                    <li>Universitas Negeri Makassar, Kampus Gunung Sari, Makassar</li>
+                    <li>{{ \App\Models\Setting::get('footer_kontak1') }}</li>
+                    <li>{{ \App\Models\Setting::get('footer_kontak2') }}</li>
+                    @if (\App\Models\Setting::get('footer_link_url') !== '')
+                        <li>
+                            <a href="{{ \App\Models\Setting::get('footer_link_url') }}" target="_blank" rel="noopener" class="footer-tautan underline">
+                                {{ \App\Models\Setting::get('footer_link_label') ?: \App\Models\Setting::get('footer_link_url') }}
+                            </a>
+                        </li>
+                    @endif
                 </ul>
             </div>
         </div>
-        <div class="border-t border-gray-800 py-5 text-center text-xs text-gray-500">
-            &copy; {{ date('Y') }} Program Studi Manajemen FEB UNM. Hak cipta dilindungi.
+        <div class="footer-bawah py-5 text-center text-xs">
+            &copy; {{ date('Y') }} {{ $namaPemilik }}. Hak cipta dilindungi.
         </div>
     </footer>
 

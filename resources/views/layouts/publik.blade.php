@@ -14,14 +14,15 @@
     <nav class="navbar-maps" x-data="{ menu: false }">
         <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-3">
             <a class="flex items-center gap-3" href="{{ route('showcase.index') }}">
-                <img src="{{ asset('favicon.svg') }}" alt="Logo MAPS" class="h-10 w-10 rounded-lg">
+                <img src="{{ \App\Models\Setting::get('logo') ? asset('storage/'.\App\Models\Setting::get('logo')) : asset('favicon.svg') }}"
+                     alt="Logo {{ \App\Models\Setting::get('nama_aplikasi') }}" class="h-10 w-10 rounded-lg object-contain">
                 <span class="leading-tight">
-                    <span class="block text-sm font-bold text-gray-900 sm:text-base">MAPS</span>
-                    <span class="block text-xs text-gray-500">Prodi Manajemen FEB UNM</span>
+                    <span class="navbar-judul block text-sm font-bold sm:text-base">{{ \App\Models\Setting::get('nama_aplikasi') }}</span>
+                    <span class="navbar-sub block text-xs">{{ \App\Models\Setting::get('nama_pemilik') }}</span>
                 </span>
             </a>
 
-            <button class="rounded-lg border border-slate-200 px-3 py-1.5 text-slate-600 md:hidden" @click="menu = !menu" aria-label="Buka menu">
+            <button class="navbar-toggle rounded-lg px-3 py-1.5 md:hidden" @click="menu = !menu" aria-label="Buka menu">
                 <i class="bi" :class="menu ? 'bi-x-lg' : 'bi-list'"></i>
             </button>
 

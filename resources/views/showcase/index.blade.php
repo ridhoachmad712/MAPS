@@ -21,24 +21,33 @@
 @endpush
 
 @section('konten')
-    {{-- Hero gradasi ala GESIT --}}
-    <section class="hero-gesit">
-        <div class="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
+    @php
+        $heroFoto = \App\Models\Setting::get('hero_foto');
+        [$hr, $hg, $hb] = \App\Support\PaletWarna::hexKeRgb(\App\Models\Setting::get('warna_hero'));
+        $heroOverlay = max(0, min(95, (int) \App\Models\Setting::get('hero_overlay'))) / 100;
+    @endphp
+
+    {{-- Hero: gradasi warna tema, atau foto + overlay bila diatur dari admin --}}
+    <section class="{{ $heroFoto ? 'relative bg-cover bg-center text-white' : 'hero-gesit' }}"
+             @if ($heroFoto) style="background-image: url('{{ asset('storage/'.$heroFoto) }}')" @endif>
+        @if ($heroFoto)
+            <div class="absolute inset-0" style="background-color: rgb({{ $hr }} {{ $hg }} {{ $hb }} / {{ $heroOverlay }})" aria-hidden="true"></div>
+        @endif
+        <div class="relative mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
             <div class="mx-auto max-w-3xl text-center">
                 <p class="text-sm font-semibold uppercase tracking-widest text-navy-100">
-                    Prodi Manajemen · FEB · Universitas Negeri Makassar
+                    {{ \App\Models\Setting::get('hero_eyebrow') }}
                 </p>
                 <h1 class="mt-3 text-3xl font-bold leading-tight sm:text-5xl">
-                    Data Capaian Mahasiswa
+                    {{ \App\Models\Setting::get('hero_judul') }}
                 </h1>
                 <p class="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-navy-100 sm:text-lg">
-                    Arsip prestasi, PKM, organisasi, MBKM, sertifikasi, dan publikasi mahasiswa
-                    yang telah diverifikasi program studi.
+                    {{ \App\Models\Setting::get('hero_deskripsi') }}
                 </p>
 
                 <form action="{{ route('showcase.capaian') }}" method="GET" class="mx-auto mt-8 flex max-w-xl rounded-xl bg-white shadow-lg">
                     <input type="search" name="q"
-                           placeholder="Cari judul capaian, penyelenggara, atau nama mahasiswa..."
+                           placeholder="{{ \App\Models\Setting::get('hero_placeholder') }}"
                            class="w-full rounded-l-xl border-0 bg-transparent px-5 py-3.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-0">
                     <button type="submit" class="rounded-r-xl bg-navy-800 px-6 text-sm font-semibold text-white transition hover:bg-navy-900">
                         Cari
@@ -68,12 +77,12 @@
     </section>
 
     {{-- Sorotan: capaian internasional & nasional terbaru --}}
-    @if ($sorotan->isNotEmpty())
+    @if ($sorotan->isNotEmpty() && \App\Models\Setting::get('sorotan_tampil') === '1')
         <section class="mx-auto max-w-7xl px-4 pt-12 sm:px-6 lg:px-8">
             <div class="flex flex-wrap items-end justify-between gap-2">
                 <div>
-                    <h2 class="text-xl font-bold text-gray-900 sm:text-2xl">Sorotan Capaian</h2>
-                    <p class="mt-1 text-sm text-gray-600">Capaian tingkat internasional dan nasional terbaru.</p>
+                    <h2 class="text-xl font-bold text-gray-900 sm:text-2xl">{{ \App\Models\Setting::get('sorotan_judul') }}</h2>
+                    <p class="mt-1 text-sm text-gray-600">{{ \App\Models\Setting::get('sorotan_sub') }}</p>
                 </div>
                 <a href="{{ route('showcase.capaian') }}" class="text-sm font-semibold text-navy-600 hover:underline">
                     Lihat semua capaian <i class="bi bi-arrow-right"></i>
@@ -113,12 +122,12 @@
     @endif
 
     {{-- Galeri mahasiswa berprestasi --}}
-    @if ($mahasiswaTop->isNotEmpty())
+    @if ($mahasiswaTop->isNotEmpty() && \App\Models\Setting::get('galeri_tampil') === '1')
         <section class="mx-auto max-w-7xl px-4 pt-12 sm:px-6 lg:px-8">
             <div class="flex flex-wrap items-end justify-between gap-2">
                 <div>
-                    <h2 class="text-xl font-bold text-gray-900 sm:text-2xl">Mahasiswa Berprestasi</h2>
-                    <p class="mt-1 text-sm text-gray-600">Dengan capaian terverifikasi terbanyak yang tampil di halaman publik.</p>
+                    <h2 class="text-xl font-bold text-gray-900 sm:text-2xl">{{ \App\Models\Setting::get('galeri_judul') }}</h2>
+                    <p class="mt-1 text-sm text-gray-600">{{ \App\Models\Setting::get('galeri_sub') }}</p>
                 </div>
                 <a href="{{ route('showcase.mahasiswa.indeks') }}" class="text-sm font-semibold text-navy-600 hover:underline">
                     Lihat semua mahasiswa <i class="bi bi-arrow-right"></i>
@@ -145,11 +154,12 @@
     @endif
 
     {{-- Grafik ringkas --}}
+    @if (\App\Models\Setting::get('grafik_tampil') === '1')
     <section class="mx-auto max-w-7xl px-4 pt-12 sm:px-6 lg:px-8">
         <div class="flex flex-wrap items-end justify-between gap-2">
             <div>
-                <h2 class="text-xl font-bold text-gray-900 sm:text-2xl">Sekilas Statistik</h2>
-                <p class="mt-1 text-sm text-gray-600">Dihitung otomatis dari entri terverifikasi.</p>
+                <h2 class="text-xl font-bold text-gray-900 sm:text-2xl">{{ \App\Models\Setting::get('grafik_judul') }}</h2>
+                <p class="mt-1 text-sm text-gray-600">{{ \App\Models\Setting::get('grafik_sub') }}</p>
             </div>
             <a href="{{ route('showcase.statistik') }}" class="text-sm font-semibold text-navy-600 hover:underline">
                 Statistik lengkap <i class="bi bi-arrow-right"></i>
@@ -166,19 +176,24 @@
             </div>
         </div>
     </section>
+    @endif
 
     {{-- Ajakan menjelajah data --}}
+    @if (\App\Models\Setting::get('cta_tampil') === '1')
     <section class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div class="card flex flex-col items-center gap-4 bg-navy-50 p-8 text-center sm:flex-row sm:justify-between sm:text-left">
             <div>
-                <h2 class="text-lg font-bold text-navy-700">Butuh data lengkapnya?</h2>
-                <p class="mt-1 text-sm text-navy-600">Jelajahi seluruh capaian terverifikasi dengan filter kategori, level, tahun, dan angkatan.</p>
+                <h2 class="text-lg font-bold text-navy-700">{{ \App\Models\Setting::get('cta_judul') }}</h2>
+                <p class="mt-1 text-sm text-navy-600">{{ \App\Models\Setting::get('cta_deskripsi') }}</p>
             </div>
             <a href="{{ route('showcase.capaian') }}" class="btn btn-maps shrink-0">
-                <i class="bi bi-table"></i>Jelajahi Data Capaian
+                <i class="bi bi-table"></i>{{ \App\Models\Setting::get('cta_tombol') }}
             </a>
         </div>
     </section>
+    @else
+    <div class="pb-12"></div>
+    @endif
 @endsection
 
 @push('js')

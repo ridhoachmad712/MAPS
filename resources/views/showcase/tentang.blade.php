@@ -8,24 +8,15 @@
     <div class="mx-auto max-w-3xl px-4 py-10 sm:px-6">
 
         <div class="text-center">
-            <img src="{{ asset('favicon.svg') }}" alt="Logo MAPS" class="mx-auto h-16 w-16 rounded-2xl">
-            <h1 class="mt-4 text-2xl font-extrabold tracking-tight text-navy-700 sm:text-3xl">Tentang MAPS</h1>
-            <p class="mt-2 text-slate-500">Management Student Achievement Portfolio System</p>
+            <img src="{{ \App\Models\Setting::get('logo') ? asset('storage/'.\App\Models\Setting::get('logo')) : asset('favicon.svg') }}"
+                 alt="Logo {{ \App\Models\Setting::get('nama_aplikasi') }}" class="mx-auto h-16 w-16 rounded-2xl object-contain">
+            <h1 class="mt-4 text-2xl font-extrabold tracking-tight text-navy-700 sm:text-3xl">Tentang {{ \App\Models\Setting::get('nama_aplikasi') }}</h1>
+            <p class="mt-2 text-slate-500">{{ \App\Models\Setting::get('tagline') }}</p>
         </div>
 
         <div class="card mt-8 p-6 sm:p-8">
-            <p class="leading-relaxed text-slate-700">
-                MAPS adalah sistem arsip dan etalase digital portofolio capaian mahasiswa
-                <strong>Program Studi Manajemen, Fakultas Ekonomi dan Bisnis, Universitas Negeri Makassar</strong>.
-                Sistem ini mencatat dan mempublikasikan capaian mahasiswa dalam tujuh kategori:
-                prestasi/kompetisi, Program Kreativitas Mahasiswa (PKM), organisasi, MBKM,
-                sertifikasi, publikasi/karya ilmiah, dan dokumentasi kegiatan lainnya.
-            </p>
-            <p class="mt-4 leading-relaxed text-slate-700">
-                Seluruh data yang tampil di halaman publik telah melalui proses verifikasi oleh
-                program studi dan ditampilkan atas persetujuan mahasiswa yang bersangkutan.
-                Statistik dihitung otomatis dari data — tidak ada angka yang diinput manual.
-            </p>
+            <p class="leading-relaxed text-slate-700">{{ \App\Models\Setting::get('tentang_p1') }}</p>
+            <p class="mt-4 leading-relaxed text-slate-700">{{ \App\Models\Setting::get('tentang_p2') }}</p>
         </div>
 
         {{-- Alur verifikasi --}}
@@ -73,12 +64,11 @@
             <ul class="space-y-3 text-sm text-slate-700">
                 <li class="flex items-start gap-3">
                     <i class="bi bi-building mt-0.5 text-navy-400"></i>
-                    Program Studi Manajemen, Fakultas Ekonomi dan Bisnis,
-                    Universitas Negeri Makassar — Kampus Gunung Sari, Makassar
+                    {{ \App\Models\Setting::get('tentang_kontak1') }}
                 </li>
                 <li class="flex items-start gap-3">
                     <i class="bi bi-envelope mt-0.5 text-navy-400"></i>
-                    Untuk koreksi data atau pertanyaan, hubungi admin program studi.
+                    {{ \App\Models\Setting::get('tentang_kontak2') }}
                 </li>
             </ul>
         </div>

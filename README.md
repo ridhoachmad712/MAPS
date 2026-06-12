@@ -50,6 +50,7 @@ Admin prodi memiliki panel tambahan di **`/master`** (Filament v5) untuk:
 - **Mahasiswa** — CRUD akun (pembuatan user otomatis: username = NIM) + **impor massal CSV** (kolom: nim, nama_lengkap, angkatan; opsional: program_studi, email — kata sandi awal = NIM)
 - **Kategori** dan **Akun Petugas** (admin/verifikator)
 - **Laporan Portofolio** — tabel baca-saja dengan filter status/level/kategori/tahun/angkatan + **ekspor Excel/CSV** untuk akreditasi
+- **Pengaturan Tampilan** — ubah identitas (nama, logo), empat warna tema (primer/hero/navbar/footer dengan kontras teks otomatis), teks & foto latar hero, tampil/sembunyi + judul seksi beranda, isi footer, dan konten halaman Tentang — semuanya berlaku langsung tanpa build ulang (tabel `pengaturan` + model `Setting` + injeksi CSS variable di `partials/tema.blade.php`)
 - Dashboard widget statistik
 
 Alur verifikasi (antrian → pemeriksaan bukti → keputusan → publikasi) tetap di halaman custom `/admin/*`. Panel `/master` hanya bisa diakses peran admin (lihat `User::canAccessPanel()`).

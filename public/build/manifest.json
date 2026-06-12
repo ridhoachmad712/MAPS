@@ -227,17 +227,29 @@
     "file": "assets/inter-700-normal-qfdV9bQt.woff2",
     "src": "_inter-700-normal-qfdV9bQt.woff2"
   },
+  "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff": {
+    "file": "assets/bootstrap-icons-BeopsB42.woff",
+    "src": "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff"
+  },
+  "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2": {
+    "file": "assets/bootstrap-icons-mSm7cUeB.woff2",
+    "src": "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2"
+  },
   "resources/css/app.css": {
-    "file": "assets/app-B8EtCE8q.css",
+    "file": "assets/app-Dgwxsu45.css",
     "name": "app",
     "names": [
       "app.css"
     ],
     "src": "resources/css/app.css",
-    "isEntry": true
+    "isEntry": true,
+    "assets": [
+      "assets/bootstrap-icons-mSm7cUeB.woff2",
+      "assets/bootstrap-icons-BeopsB42.woff"
+    ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-OBajGs4p.js",
+    "file": "assets/app-8atC04Rn.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true

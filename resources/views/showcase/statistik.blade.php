@@ -88,8 +88,8 @@
 @endsection
 
 @push('js')
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 <script>
+document.addEventListener('DOMContentLoaded', () => {
     const gayaAkar = getComputedStyle(document.documentElement);
     const warnaPrimer = gayaAkar.getPropertyValue('--tblr-primary').trim() || '#066fd1';
     const warnaPrimerMuda = gayaAkar.getPropertyValue('--primer-400').trim() || warnaPrimer;
@@ -174,5 +174,6 @@
         },
         options: opsiRingkas,
     });
+});
 </script>
 @endpush

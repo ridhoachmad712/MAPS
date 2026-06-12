@@ -1,6 +1,9 @@
 /* Tabler — kerangka tampilan utama (Bootstrap 5) */
 @import '@tabler/core/dist/css/tabler.css';
 
+/* Ikon (bi-*) — dibundel lokal, tidak bergantung CDN */
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
 /*
  * Penyesuaian kecil di atas Tabler.
  * Warna dapat diubah admin lewat Pengaturan Tampilan — variabel

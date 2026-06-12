@@ -26,7 +26,6 @@
     <meta name="twitter:card" content="summary">
 
     @stack('head')
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @include('partials.tema')
     @stack('css')

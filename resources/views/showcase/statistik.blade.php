@@ -39,22 +39,22 @@
         <div class="mb-4 grid gap-4 lg:grid-cols-12">
             <div class="card lg:col-span-7">
                 <div class="card-header text-sm"><i class="bi bi-bar-chart-fill"></i>Capaian per kategori</div>
-                <div class="px-4 py-3"><canvas id="grafikKategori" height="190"></canvas></div>
+                <div class="relative h-72 px-4 py-3"><canvas id="grafikKategori"></canvas></div>
             </div>
             <div class="card lg:col-span-5">
                 <div class="card-header text-sm"><i class="bi bi-pie-chart-fill"></i>Distribusi per level</div>
-                <div class="flex justify-center px-4 py-3"><canvas id="grafikLevel" height="190"></canvas></div>
+                <div class="relative h-72 px-4 py-3"><canvas id="grafikLevel"></canvas></div>
             </div>
         </div>
 
         <div class="grid gap-4 lg:grid-cols-2">
             <div class="card">
                 <div class="card-header text-sm"><i class="bi bi-graph-up-arrow"></i>Tren capaian per tahun</div>
-                <div class="px-4 py-3"><canvas id="grafikTren" height="170"></canvas></div>
+                <div class="relative h-64 px-4 py-3"><canvas id="grafikTren"></canvas></div>
             </div>
             <div class="card">
                 <div class="card-header text-sm"><i class="bi bi-people"></i>Capaian per angkatan</div>
-                <div class="px-4 py-3"><canvas id="grafikAngkatan" height="170"></canvas></div>
+                <div class="relative h-64 px-4 py-3"><canvas id="grafikAngkatan"></canvas></div>
             </div>
         </div>
 
@@ -80,6 +80,8 @@
     };
 
     const opsiRingkas = {
+        responsive: true,
+        maintainAspectRatio: false,
         plugins: { legend: { display: false }, tooltip: tooltipMaps },
         scales: { y: { beginAtZero: true, ticks: { precision: 0 } } },
     };
@@ -107,6 +109,8 @@
             }],
         },
         options: {
+            responsive: true,
+            maintainAspectRatio: false,
             plugins: {
                 legend: { position: 'bottom' },
                 tooltip: { ...tooltipMaps, callbacks: { label: (c) => ` ${c.label}: ${c.formattedValue} capaian` } },

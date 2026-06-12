@@ -168,11 +168,11 @@
         <div class="mt-5 grid gap-4 md:grid-cols-2">
             <div class="card">
                 <div class="card-header text-sm"><i class="bi bi-graph-up-arrow"></i>Tren capaian per tahun</div>
-                <div class="px-4 py-3"><canvas id="grafikTren" height="140"></canvas></div>
+                <div class="relative h-56 px-4 py-3"><canvas id="grafikTren"></canvas></div>
             </div>
             <div class="card">
                 <div class="card-header text-sm"><i class="bi bi-people"></i>Capaian per angkatan</div>
-                <div class="px-4 py-3"><canvas id="grafikAngkatan" height="140"></canvas></div>
+                <div class="relative h-56 px-4 py-3"><canvas id="grafikAngkatan"></canvas></div>
             </div>
         </div>
     </section>
@@ -211,6 +211,8 @@
     };
 
     const opsiRingkas = {
+        responsive: true,
+        maintainAspectRatio: false,
         plugins: { legend: { display: false }, tooltip: tooltipMaps },
         scales: { y: { beginAtZero: true, ticks: { precision: 0 } } },
     };

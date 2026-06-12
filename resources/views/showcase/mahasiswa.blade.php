@@ -28,9 +28,9 @@
 @section('konten')
     <div class="mx-auto max-w-7xl px-4 py-6">
         <nav class="mb-4 text-sm text-slate-500">
-            <a href="{{ route('showcase.index') }}" class="hover:text-navy-700 hover:underline">Data Capaian</a>
+            <a href="{{ route('showcase.mahasiswa.indeks') }}" class="hover:text-navy-700 hover:underline">Mahasiswa</a>
             <span class="mx-1.5">/</span>
-            <span class="text-slate-700">Profil Mahasiswa</span>
+            <span class="text-slate-700">{{ $mahasiswa->nama_lengkap }}</span>
         </nav>
 
         {{-- Kartu identitas --}}

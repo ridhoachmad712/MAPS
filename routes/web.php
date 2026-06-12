@@ -19,7 +19,14 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 Route::get('/', [ShowcaseController::class, 'index'])->name('showcase.index');
-Route::get('/showcase/mahasiswa/{mahasiswa}', [ShowcaseController::class, 'mahasiswa'])->name('showcase.mahasiswa');
+Route::get('/capaian', [ShowcaseController::class, 'capaian'])->name('showcase.capaian');
+Route::get('/mahasiswa', [ShowcaseController::class, 'daftarMahasiswa'])->name('showcase.mahasiswa.indeks');
+Route::get('/mahasiswa/{mahasiswa}', [ShowcaseController::class, 'mahasiswa'])->name('showcase.mahasiswa');
+Route::get('/statistik', [ShowcaseController::class, 'statistik'])->name('showcase.statistik');
+Route::view('/tentang', 'showcase.tentang')->name('showcase.tentang');
+
+// Alamat profil lama (sebelum restrukturisasi menu) — alihkan permanen
+Route::get('/showcase/mahasiswa/{mahasiswa}', fn (string $mahasiswa) => redirect("/mahasiswa/{$mahasiswa}", 301));
 
 // Berkas bukti: otorisasi diatur di controller (pemilik/petugas/publik)
 Route::get('/bukti/{bukti}', [BuktiController::class, 'show'])->name('bukti.show');

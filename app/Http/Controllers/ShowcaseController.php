@@ -10,7 +10,41 @@ use Illuminate\Support\Facades\DB;
 
 class ShowcaseController extends Controller
 {
-    public function index(Request $request)
+    /**
+     * Beranda: etalase ringkas (hero, sorotan, galeri, grafik ringkas).
+     */
+    public function index()
+    {
+        $statistik = $this->statistikRingkas();
+
+        $sorotan = Portofolio::publik()
+            ->with(['mahasiswa', 'kategori'])
+            ->whereIn('level', ['internasional', 'nasional'])
+            ->orderByRaw("FIELD(level, 'internasional', 'nasional')")
+            ->orderByDesc('tahun_pencapaian')
+            ->take(3)
+            ->get();
+
+        $mahasiswaTop = Mahasiswa::where('konsen_publik', true)
+            ->withCount(['portofolio as total_publik' => fn ($q) => $q->publik()])
+            ->having('total_publik', '>', 0)
+            ->orderByDesc('total_publik')
+            ->take(6)
+            ->get();
+
+        return view('showcase.index', [
+            'statistik' => $statistik,
+            'sorotan' => $sorotan,
+            'mahasiswaTop' => $mahasiswaTop,
+            'perAngkatan' => $this->perAngkatan(),
+            'trenTahun' => $this->trenTahun(),
+        ]);
+    }
+
+    /**
+     * Capaian: penjelajah data lengkap (filter, urut, tabel).
+     */
+    public function capaian(Request $request)
     {
         $entri = Portofolio::publik()
             ->with(['mahasiswa', 'kategori'])
@@ -50,62 +84,62 @@ class ShowcaseController extends Controller
             ->orderByDesc('tahun_pencapaian')
             ->pluck('tahun_pencapaian');
 
-        $daftarAngkatan = Mahasiswa::where('konsen_publik', true)
-            ->whereHas('portofolio', fn ($q) => $q->publik())
-            ->select('angkatan')
-            ->distinct()
-            ->orderByDesc('angkatan')
-            ->pluck('angkatan');
-
-        // Statistik ringkas resmi: dihitung dari entri terverifikasi
-        $statistik = [
-            'mahasiswa_berprestasi' => Mahasiswa::whereHas('portofolio', fn ($q) => $q->terverifikasi())->count(),
-            'total_capaian' => Portofolio::terverifikasi()->count(),
-            'nasional' => Portofolio::terverifikasi()->where('level', 'nasional')->count(),
-            'internasional' => Portofolio::terverifikasi()->where('level', 'internasional')->count(),
-        ];
-
-        $perAngkatan = Portofolio::terverifikasi()
-            ->join('mahasiswa', 'mahasiswa.mahasiswa_id', '=', 'portofolio.mahasiswa_id')
-            ->select('mahasiswa.angkatan', DB::raw('COUNT(*) AS total'))
-            ->groupBy('mahasiswa.angkatan')
-            ->orderBy('mahasiswa.angkatan')
-            ->pluck('total', 'angkatan');
-
-        $trenTahun = Portofolio::terverifikasi()
-            ->select('tahun_pencapaian', DB::raw('COUNT(*) AS total'))
-            ->groupBy('tahun_pencapaian')
-            ->orderBy('tahun_pencapaian')
-            ->pluck('total', 'tahun_pencapaian');
-
-        // Sorotan & galeri hanya tampil di beranda tanpa filter
-        $tanpaFilter = ! $request->hasAny(['q', 'kategori', 'level', 'tahun', 'angkatan', 'urut', 'page']);
-
-        $sorotan = $tanpaFilter
-            ? Portofolio::publik()
-                ->with(['mahasiswa', 'kategori'])
-                ->whereIn('level', ['internasional', 'nasional'])
-                ->orderByRaw("FIELD(level, 'internasional', 'nasional')")
-                ->orderByDesc('tahun_pencapaian')
-                ->take(3)
-                ->get()
-            : collect();
-
-        $mahasiswaTop = $tanpaFilter
-            ? Mahasiswa::where('konsen_publik', true)
-                ->withCount(['portofolio as total_publik' => fn ($q) => $q->publik()])
-                ->having('total_publik', '>', 0)
-                ->orderByDesc('total_publik')
-                ->take(6)
-                ->get()
-            : collect();
-
-        return view('showcase.index', compact(
-            'entri', 'kategori', 'daftarTahun', 'daftarAngkatan', 'statistik', 'perAngkatan', 'trenTahun',
-            'sorotan', 'mahasiswaTop',
-        ));
+        return view('showcase.capaian', [
+            'entri' => $entri,
+            'kategori' => $kategori,
+            'daftarTahun' => $daftarTahun,
+            'daftarAngkatan' => $this->daftarAngkatanPublik(),
+        ]);
     }
 
+    /**
+     * Direktori mahasiswa berprestasi.
+     */
+    public function daftarMahasiswa(Request $request)
+    {
+        $mahasiswa = Mahasiswa::where('konsen_publik', true)
+            ->withCount(['portofolio as total_publik' => fn ($q) => $q->publik()])
+            ->having('total_publik', '>', 0)
+            ->when($request->filled('q'), fn ($q) => $q->where('nama_lengkap', 'like', '%'.$request->input('q').'%'))
+            ->when($request->filled('angkatan'), fn ($q) => $q->where('angkatan', $request->input('angkatan')))
+            ->orderByDesc('total_publik')
+            ->orderBy('nama_lengkap')
+            ->paginate(18)
+            ->withQueryString();
+
+        return view('showcase.mahasiswa-indeks', [
+            'mahasiswa' => $mahasiswa,
+            'daftarAngkatan' => $this->daftarAngkatanPublik(),
+        ]);
+    }
+
+    /**
+     * Statistik publik lengkap.
+     */
+    public function statistik()
+    {
+        $perKategori = Kategori::query()
+            ->withCount(['portofolio as total' => fn ($q) => $q->terverifikasi()])
+            ->orderBy('kategori_id')
+            ->get();
+
+        $perLevel = Portofolio::terverifikasi()
+            ->select('level', DB::raw('COUNT(*) AS total'))
+            ->groupBy('level')
+            ->pluck('total', 'level');
+
+        return view('showcase.statistik', [
+            'statistik' => $this->statistikRingkas(),
+            'perKategori' => $perKategori,
+            'perLevel' => $perLevel,
+            'perAngkatan' => $this->perAngkatan(),
+            'trenTahun' => $this->trenTahun(),
+        ]);
+    }
+
+    /**
+     * Profil publik satu mahasiswa.
+     */
     public function mahasiswa(Mahasiswa $mahasiswa)
     {
         abort_unless($mahasiswa->konsen_publik, 404);
@@ -128,5 +162,47 @@ class ShowcaseController extends Controller
             ->filter(fn ($k) => $k->total > 0);
 
         return view('showcase.mahasiswa', compact('mahasiswa', 'entri', 'perKategori'));
+    }
+
+    /**
+     * @return array{mahasiswa_berprestasi: int, total_capaian: int, nasional: int, internasional: int}
+     */
+    private function statistikRingkas(): array
+    {
+        return [
+            'mahasiswa_berprestasi' => Mahasiswa::whereHas('portofolio', fn ($q) => $q->terverifikasi())->count(),
+            'total_capaian' => Portofolio::terverifikasi()->count(),
+            'nasional' => Portofolio::terverifikasi()->where('level', 'nasional')->count(),
+            'internasional' => Portofolio::terverifikasi()->where('level', 'internasional')->count(),
+        ];
+    }
+
+    private function perAngkatan()
+    {
+        return Portofolio::terverifikasi()
+            ->join('mahasiswa', 'mahasiswa.mahasiswa_id', '=', 'portofolio.mahasiswa_id')
+            ->select('mahasiswa.angkatan', DB::raw('COUNT(*) AS total'))
+            ->groupBy('mahasiswa.angkatan')
+            ->orderBy('mahasiswa.angkatan')
+            ->pluck('total', 'angkatan');
+    }
+
+    private function trenTahun()
+    {
+        return Portofolio::terverifikasi()
+            ->select('tahun_pencapaian', DB::raw('COUNT(*) AS total'))
+            ->groupBy('tahun_pencapaian')
+            ->orderBy('tahun_pencapaian')
+            ->pluck('total', 'tahun_pencapaian');
+    }
+
+    private function daftarAngkatanPublik()
+    {
+        return Mahasiswa::where('konsen_publik', true)
+            ->whereHas('portofolio', fn ($q) => $q->publik())
+            ->select('angkatan')
+            ->distinct()
+            ->orderByDesc('angkatan')
+            ->pluck('angkatan');
     }
 }

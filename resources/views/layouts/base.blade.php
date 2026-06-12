@@ -66,9 +66,13 @@
             <div>
                 <h3 class="text-sm font-semibold uppercase tracking-wider text-white">Tautan</h3>
                 <ul class="mt-4 space-y-2 text-sm">
-                    <li><a href="{{ route('showcase.index') }}" class="hover:text-navy-200">Data Capaian</a></li>
+                    <li><a href="{{ route('showcase.index') }}" class="hover:text-navy-200">Beranda</a></li>
+                    <li><a href="{{ route('showcase.capaian') }}" class="hover:text-navy-200">Capaian</a></li>
+                    <li><a href="{{ route('showcase.mahasiswa.indeks') }}" class="hover:text-navy-200">Mahasiswa</a></li>
+                    <li><a href="{{ route('showcase.statistik') }}" class="hover:text-navy-200">Statistik</a></li>
+                    <li><a href="{{ route('showcase.tentang') }}" class="hover:text-navy-200">Tentang</a></li>
                     @auth
-                        <li><a href="{{ route('dashboard') }}" class="hover:text-navy-200">Dashboard</a></li>
+                        <li><a href="{{ route('dashboard') }}" class="hover:text-navy-200">Dasbor</a></li>
                     @else
                         <li><a href="{{ route('login') }}" class="hover:text-navy-200">Masuk</a></li>
                     @endauth

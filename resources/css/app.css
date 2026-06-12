@@ -1,0 +1,273 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+@theme {
+    --font-sans: 'Figtree', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+
+    /* Ramp biru bergaya GESIT — primer #1E3A8A di posisi 500 */
+    --color-navy-50: #eef2fa;
+    --color-navy-100: #dce4f5;
+    --color-navy-200: #b9c9eb;
+    --color-navy-300: #8fa8dc;
+    --color-navy-400: #5577c0;
+    --color-navy-500: #1e3a8a;
+    --color-navy-600: #1b3479;
+    --color-navy-700: #172c68;
+    --color-navy-800: #122252;
+    --color-navy-900: #0d193d;
+}
+
+@layer base {
+    [x-cloak] { display: none !important; }
+
+    body {
+        background: #f9fafb;
+        color: #111827;
+    }
+}
+
+@layer components {
+    /* ---------- Tombol ---------- */
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        border-radius: 0.5rem;
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+        white-space: nowrap;
+    }
+    .btn-sm {
+        padding: 0.32rem 0.7rem;
+        font-size: 0.8rem;
+    }
+    .btn-maps {
+        color: #fff;
+        background: var(--color-navy-500);
+    }
+    .btn-maps:hover { background: var(--color-navy-600); color: #fff; }
+    .btn-primary {
+        color: #fff;
+        background: var(--color-navy-500);
+    }
+    .btn-primary:hover { background: var(--color-navy-600); color: #fff; }
+    .btn-outline {
+        border: 1px solid #e5e7eb;
+        color: #4b5563;
+        background: #fff;
+    }
+    .btn-outline:hover { background: #f3f4f6; color: #111827; }
+    .btn-outline-primary {
+        border: 1px solid var(--color-navy-200);
+        color: var(--color-navy-600);
+        background: #fff;
+    }
+    .btn-outline-primary:hover { background: var(--color-navy-50); }
+    .btn-outline-danger {
+        border: 1px solid #e5e7eb;
+        color: #b91c1c;
+        background: #fff;
+    }
+    .btn-outline-danger:hover { background: #fef2f2; border-color: #fecaca; }
+    .btn-outline-success {
+        border: 1px solid #e5e7eb;
+        color: #15803d;
+        background: #fff;
+    }
+    .btn-outline-success:hover { background: #f0fdf4; border-color: #bbf7d0; }
+    .btn:disabled { opacity: 0.45; pointer-events: none; }
+
+    /* ---------- Kartu (rounded-xl, hover border biru + bayangan) ---------- */
+    .card {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.75rem;
+        box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+        overflow: hidden;
+    }
+    .card-hover { transition: border-color 0.15s ease, box-shadow 0.15s ease; }
+    .card-hover:hover {
+        border-color: var(--color-navy-300);
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    }
+    .card-header {
+        padding: 0.85rem 1.25rem;
+        border-bottom: 1px solid #f3f4f6;
+        font-weight: 700;
+        color: #111827;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .card-body { padding: 1.25rem; }
+
+    /* ---------- Badge: pill bulat penuh ala GESIT ---------- */
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        border-radius: 9999px;
+        padding: 0.28em 0.8em;
+        font-size: 0.74rem;
+        font-weight: 500;
+        line-height: 1.4;
+        white-space: nowrap;
+    }
+    .badge-primary { background: var(--color-navy-50); color: var(--color-navy-600); }
+    .badge-secondary { background: #f3f4f6; color: #4b5563; }
+    .badge-success { background: #dcfce7; color: #15803d; }
+    .badge-danger { background: #fee2e2; color: #b91c1c; }
+    .badge-warning { background: #fef3c7; color: #b45309; }
+    .badge-info { background: #e0f2fe; color: #0369a1; }
+    .badge-soft { background: #f3f4f6; color: #4b5563; }
+    .badge-soft-success { background: #dcfce7; color: #15803d; }
+    .badge-soft-secondary { background: #f3f4f6; color: #6b7280; }
+    .badge-navy { background: var(--color-navy-500); color: #fff; }
+    .badge-level-regional { background: var(--color-navy-50); color: var(--color-navy-600); }
+    .badge-level-nasional { background: var(--color-navy-100); color: var(--color-navy-700); }
+    .badge-level-internasional { background: var(--color-navy-500); color: #fff; }
+
+    /* ---------- Form ---------- */
+    .form-label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.35rem;
+    }
+    .form-control, .form-select {
+        display: block;
+        width: 100%;
+        border: 1px solid #d1d5db;
+        border-radius: 0.5rem;
+        background: #fff;
+        padding: 0.55rem 0.85rem;
+        font-size: 0.9rem;
+        color: #111827;
+        transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .form-control:focus, .form-select:focus {
+        outline: none;
+        border-color: var(--color-navy-400);
+        box-shadow: 0 0 0 0.18rem rgb(30 58 138 / 0.12);
+    }
+    .form-control-sm, .form-select-sm { padding: 0.35rem 0.65rem; font-size: 0.83rem; }
+    .form-control.is-invalid, .form-select.is-invalid { border-color: #dc2626; }
+    .invalid-feedback { display: block; margin-top: 0.3rem; font-size: 0.8rem; color: #dc2626; }
+    .form-text { margin-top: 0.3rem; font-size: 0.78rem; color: #6b7280; }
+    .form-check-input {
+        width: 1.05rem;
+        height: 1.05rem;
+        accent-color: var(--color-navy-500);
+        cursor: pointer;
+    }
+
+    /* ---------- Tabel ---------- */
+    .table-maps { width: 100%; font-size: 0.875rem; text-align: left; }
+    .table-maps thead th {
+        background: #f9fafb;
+        padding: 0.7rem 1rem;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #6b7280;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+    .table-maps tbody td {
+        padding: 0.75rem 1rem;
+        border-top: 1px solid #f3f4f6;
+        vertical-align: middle;
+    }
+    .table-maps tbody tr { transition: background 0.12s; }
+    .table-maps tbody tr:hover { background: #f9fafb; }
+
+    /* ---------- Alert ---------- */
+    .alert {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.6rem;
+        border-radius: 0.75rem;
+        padding: 0.9rem 1.1rem;
+        font-size: 0.875rem;
+        margin-bottom: 1rem;
+    }
+    .alert-success { background: #f0fdf4; color: #15803d; border: 1px solid #dcfce7; }
+    .alert-danger { background: #fef2f2; color: #b91c1c; border: 1px solid #fee2e2; }
+    .alert-warning { background: #fffbeb; color: #b45309; border: 1px solid #fef3c7; }
+
+    /* ---------- Avatar ---------- */
+    .foto-avatar { width: 48px; height: 48px; object-fit: cover; border-radius: 9999px; flex-shrink: 0; }
+    .foto-avatar-besar {
+        width: 110px; height: 110px; object-fit: cover; border-radius: 9999px;
+        border: 3px solid #fff; box-shadow: 0 1px 3px rgb(0 0 0 / 0.15); flex-shrink: 0;
+    }
+    .avatar-inisial {
+        width: 48px; height: 48px; border-radius: 9999px; display: inline-flex; flex-shrink: 0;
+        align-items: center; justify-content: center; font-weight: 700;
+        background: var(--color-navy-50); color: var(--color-navy-600);
+    }
+    .avatar-inisial-besar {
+        width: 110px; height: 110px; border-radius: 9999px; display: inline-flex; font-size: 2.4rem; flex-shrink: 0;
+        align-items: center; justify-content: center; font-weight: 700;
+        background: var(--color-navy-50); color: var(--color-navy-600);
+        border: 3px solid #fff; box-shadow: 0 1px 3px rgb(0 0 0 / 0.15);
+    }
+
+    /* ---------- Hero gradasi ala GESIT ---------- */
+    .hero-gesit {
+        color: #fff;
+        background-image: linear-gradient(to bottom right, var(--color-navy-500), var(--color-navy-600), var(--color-navy-700));
+    }
+
+    /* ---------- Navigasi: putih sticky dengan blur ---------- */
+    .navbar-maps {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        background: rgb(255 255 255 / 0.95);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid #e5e7eb;
+    }
+    .nav-link-maps {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        color: #374151;
+        border-radius: 0.375rem;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: background 0.15s, color 0.15s;
+        white-space: nowrap;
+    }
+    .nav-link-maps:hover { color: #111827; background: #f3f4f6; }
+    .nav-link-maps.aktif { color: var(--color-navy-600); background: var(--color-navy-50); }
+
+    /* ---------- Modal (Alpine) ---------- */
+    .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 50;
+        background: rgb(17 24 39 / 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+    }
+    .modal-box {
+        background: #fff;
+        border-radius: 0.75rem;
+        width: 100%;
+        max-width: 28rem;
+        box-shadow: 0 20px 40px -16px rgb(17 24 39 / 0.3);
+        overflow: hidden;
+    }
+}

@@ -1,0 +1,86 @@
+@csrf
+
+<div class="grid gap-4 md:grid-cols-12">
+    <div class="md:col-span-8">
+        <label class="form-label">Judul Capaian <span class="text-red-600">*</span></label>
+        <input type="text" name="judul" class="form-control @error('judul') is-invalid @enderror"
+               value="{{ old('judul', $portofolio->judul ?? '') }}"
+               placeholder="contoh: Juara 1 Public Speaking Competition" required>
+        @error('judul')<div class="invalid-feedback">{{ $message }}</div>@enderror
+    </div>
+    <div class="md:col-span-4">
+        <label class="form-label">Kategori <span class="text-red-600">*</span></label>
+        <select name="kategori_id" class="form-select @error('kategori_id') is-invalid @enderror" required>
+            <option value="">— pilih kategori —</option>
+            @foreach ($kategori as $k)
+                <option value="{{ $k->kategori_id }}" @selected(old('kategori_id', $portofolio->kategori_id ?? '') == $k->kategori_id)>
+                    {{ $k->kode }} — {{ $k->nama_kategori }}
+                </option>
+            @endforeach
+        </select>
+        @error('kategori_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
+    </div>
+
+    <div class="md:col-span-3">
+        <label class="form-label">Tahun Pencapaian <span class="text-red-600">*</span></label>
+        <input type="number" name="tahun_pencapaian" min="2000" max="2100"
+               class="form-control @error('tahun_pencapaian') is-invalid @enderror"
+               value="{{ old('tahun_pencapaian', $portofolio->tahun_pencapaian ?? date('Y')) }}" required>
+        @error('tahun_pencapaian')<div class="invalid-feedback">{{ $message }}</div>@enderror
+    </div>
+    <div class="md:col-span-3">
+        <label class="form-label">Level <span class="text-red-600">*</span></label>
+        <select name="level" class="form-select @error('level') is-invalid @enderror" required>
+            <option value="">— pilih level —</option>
+            @foreach (\App\Models\Portofolio::LEVEL_LABEL as $nilai => $label)
+                <option value="{{ $nilai }}" @selected(old('level', $portofolio->level ?? '') === $nilai)>{{ $label }}</option>
+            @endforeach
+        </select>
+        @error('level')<div class="invalid-feedback">{{ $message }}</div>@enderror
+    </div>
+    <div class="md:col-span-3">
+        <label class="form-label">Penyelenggara</label>
+        <input type="text" name="penyelenggara" class="form-control"
+               value="{{ old('penyelenggara', $portofolio->penyelenggara ?? '') }}"
+               placeholder="contoh: Universitas Indonesia">
+    </div>
+    <div class="md:col-span-3">
+        <label class="form-label">Peran / Capaian</label>
+        <input type="text" name="peran_capaian" class="form-control"
+               value="{{ old('peran_capaian', $portofolio->peran_capaian ?? '') }}"
+               placeholder="contoh: Ketua Tim (Juara 2)">
+    </div>
+
+    <div class="md:col-span-12">
+        <label class="form-label">Deskripsi</label>
+        <textarea name="deskripsi" rows="3" class="form-control"
+                  placeholder="Ceritakan singkat tentang capaian ini...">{{ old('deskripsi', $portofolio->deskripsi ?? '') }}</textarea>
+    </div>
+
+    <div class="md:col-span-12">
+        <label class="form-label">Unggah Bukti (PDF/JPG/PNG, maks 5 MB per berkas, maks 5 berkas)</label>
+        <input type="file" name="bukti[]" class="form-control @error('bukti.*') is-invalid @enderror"
+               accept=".pdf,.jpg,.jpeg,.png" multiple>
+        @error('bukti.*')<div class="invalid-feedback">{{ $message }}</div>@enderror
+        <div class="form-text">Bukti minimal satu berkas diperlukan sebelum entri dapat diajukan untuk verifikasi.</div>
+    </div>
+
+    <div class="md:col-span-12">
+        <label class="flex items-start gap-2.5 text-sm text-slate-700">
+            <input class="form-check-input mt-0.5" type="checkbox" name="is_publik" value="1"
+                   @checked(old('is_publik', $portofolio->is_publik ?? false))>
+            <span>Saya setuju capaian ini ditampilkan di halaman publik (showcase) setelah terverifikasi.</span>
+        </label>
+    </div>
+</div>
+
+<hr class="my-5 border-slate-100">
+<div class="flex flex-wrap items-center gap-2">
+    <button type="submit" name="aksi" value="simpan" class="btn btn-outline">
+        <i class="bi bi-save"></i>Simpan sebagai Draft
+    </button>
+    <button type="submit" name="aksi" value="ajukan" class="btn btn-maps">
+        <i class="bi bi-send"></i>Simpan &amp; Ajukan Verifikasi
+    </button>
+    <a href="{{ route('portofolio.index') }}" class="px-3 text-sm text-slate-500 hover:text-slate-700">Batal</a>
+</div>

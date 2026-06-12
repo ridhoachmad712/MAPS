@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\KategoriAdminController;
 use App\Http\Controllers\Admin\MahasiswaAdminController;
+use App\Http\Controllers\Admin\PengaturanAdminController;
 use App\Http\Controllers\Admin\PenggunaAdminController;
 use App\Http\Controllers\Admin\PortofolioAdminController;
 use App\Http\Controllers\Admin\VerifikasiController;
@@ -81,6 +82,7 @@ Route::middleware(['auth', 'role:admin,verifikator'])->prefix('admin')->name('ad
     Route::post('/verifikasi/{portofolio}', [VerifikasiController::class, 'proses'])->name('verifikasi.proses');
 
     Route::get('/portofolio', [PortofolioAdminController::class, 'index'])->name('portofolio.index');
+    Route::get('/portofolio-export', [PortofolioAdminController::class, 'export'])->name('portofolio.export');
 });
 
 /*
@@ -92,9 +94,15 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/portofolio/{portofolio}/publikasikan', [VerifikasiController::class, 'publikasikan'])->name('portofolio.publikasikan');
     Route::post('/portofolio/{portofolio}/batalkan-publikasi', [VerifikasiController::class, 'batalkanPublikasi'])->name('portofolio.batalkan');
 
+    Route::get('/mahasiswa-import', [MahasiswaAdminController::class, 'importForm'])->name('mahasiswa.import.form');
+    Route::post('/mahasiswa-import', [MahasiswaAdminController::class, 'import'])->name('mahasiswa.import');
+
     Route::resource('mahasiswa', MahasiswaAdminController::class)
         ->parameters(['mahasiswa' => 'mahasiswa'])
         ->except(['show']);
+
+    Route::get('/pengaturan', [PengaturanAdminController::class, 'edit'])->name('pengaturan.edit');
+    Route::put('/pengaturan', [PengaturanAdminController::class, 'update'])->name('pengaturan.update');
 
     Route::get('/kategori', [KategoriAdminController::class, 'index'])->name('kategori.index');
     Route::post('/kategori', [KategoriAdminController::class, 'store'])->name('kategori.store');

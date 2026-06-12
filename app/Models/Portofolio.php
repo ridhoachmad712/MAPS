@@ -37,6 +37,12 @@ class Portofolio extends Model
         'internasional' => 'Internasional',
     ];
 
+    public const LEVEL_BADGE = [
+        'regional' => 'cyan',
+        'nasional' => 'blue',
+        'internasional' => 'purple',
+    ];
+
     protected $fillable = [
         'mahasiswa_id',
         'kategori_id',
@@ -110,6 +116,11 @@ class Portofolio extends Model
     public function levelLabel(): string
     {
         return self::LEVEL_LABEL[$this->level] ?? $this->level;
+    }
+
+    public function levelBadge(): string
+    {
+        return self::LEVEL_BADGE[$this->level] ?? 'secondary';
     }
 
     public function bisaDieditMahasiswa(): bool

@@ -3,126 +3,135 @@
 @section('judul', $portofolio->judul)
 
 @section('konten')
-    <nav class="mb-4 text-sm text-slate-500">
-        <a href="{{ route('portofolio.index') }}" class="hover:text-navy-700 hover:underline">Portofolio Saya</a>
-        <span class="mx-1.5">/</span>
-        <span class="text-slate-700">Detail</span>
-    </nav>
+    <ol class="breadcrumb mb-3" aria-label="breadcrumbs">
+        <li class="breadcrumb-item"><a href="{{ route('portofolio.index') }}">Portofolio Saya</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Detail</li>
+    </ol>
 
     @include('partials.stepper-status')
 
-    <div class="grid gap-4 lg:grid-cols-12">
-        <div class="space-y-4 lg:col-span-8">
+    <div class="row g-3">
+        <div class="col-12 col-lg-8 d-grid gap-3 align-content-start">
             <div class="card">
-                <div class="card-body p-6">
-                    <div class="mb-3 flex flex-wrap items-start justify-between gap-3">
-                        <h1 class="text-xl font-extrabold text-navy-700">{{ $portofolio->judul }}</h1>
-                        <span class="badge badge-{{ $portofolio->statusBadge() }}">{{ $portofolio->statusLabel() }}</span>
+                <div class="card-body">
+                    <div class="d-flex flex-wrap align-items-start justify-content-between gap-3 mb-3">
+                        <h1 class="h2 mb-0">{{ $portofolio->judul }}</h1>
+                        <span class="badge bg-{{ $portofolio->statusBadge() }}-lt">{{ $portofolio->statusLabel() }}</span>
                     </div>
-                    <div class="mb-4 flex flex-wrap gap-1.5">
-                        <span class="badge badge-soft">{{ $portofolio->kategori->kode }} — {{ $portofolio->kategori->nama_kategori }}</span>
-                        <span class="badge badge-level-{{ $portofolio->level }}">{{ $portofolio->levelLabel() }}</span>
-                        <span class="badge badge-soft">{{ $portofolio->tahun_pencapaian }}</span>
+                    <div class="d-flex flex-wrap gap-1 mb-3">
+                        <span class="badge bg-secondary-lt">{{ $portofolio->kategori->kode }} — {{ $portofolio->kategori->nama_kategori }}</span>
+                        <span class="badge bg-{{ $portofolio->levelBadge() }}-lt">{{ $portofolio->levelLabel() }}</span>
+                        <span class="badge bg-secondary-lt">{{ $portofolio->tahun_pencapaian }}</span>
                     </div>
-                    <dl class="grid gap-x-6 gap-y-3 text-sm sm:grid-cols-[10rem_1fr]">
-                        <dt class="font-semibold text-slate-500">Penyelenggara</dt>
-                        <dd>{{ $portofolio->penyelenggara ?: '—' }}</dd>
-                        <dt class="font-semibold text-slate-500">Peran / Capaian</dt>
-                        <dd>{{ $portofolio->peran_capaian ?: '—' }}</dd>
-                        <dt class="font-semibold text-slate-500">Deskripsi</dt>
-                        <dd>{{ $portofolio->deskripsi ?: '—' }}</dd>
-                        <dt class="font-semibold text-slate-500">Tampil Publik</dt>
-                        <dd>
-                            @if ($portofolio->is_publik)
-                                <span class="text-green-600"><i class="bi bi-eye-fill"></i> Disetujui tampil di showcase</span>
-                            @else
-                                <span class="text-slate-400"><i class="bi bi-eye-slash"></i> Tidak ditampilkan di showcase</span>
-                            @endif
-                        </dd>
-                    </dl>
+                    <div class="datagrid">
+                        <div class="datagrid-item">
+                            <div class="datagrid-title">Penyelenggara</div>
+                            <div class="datagrid-content">{{ $portofolio->penyelenggara ?: '—' }}</div>
+                        </div>
+                        <div class="datagrid-item">
+                            <div class="datagrid-title">Peran / Capaian</div>
+                            <div class="datagrid-content">{{ $portofolio->peran_capaian ?: '—' }}</div>
+                        </div>
+                        <div class="datagrid-item">
+                            <div class="datagrid-title">Deskripsi</div>
+                            <div class="datagrid-content">{{ $portofolio->deskripsi ?: '—' }}</div>
+                        </div>
+                        <div class="datagrid-item">
+                            <div class="datagrid-title">Tampil Publik</div>
+                            <div class="datagrid-content">
+                                @if ($portofolio->is_publik)
+                                    <span class="text-success"><i class="bi bi-eye-fill me-1"></i>Disetujui tampil di showcase</span>
+                                @else
+                                    <span class="text-secondary"><i class="bi bi-eye-slash me-1"></i>Tidak ditampilkan di showcase</span>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div class="card">
-                <div class="card-header"><i class="bi bi-paperclip"></i>Berkas Bukti ({{ $portofolio->bukti->count() }})</div>
-                <ul class="divide-y divide-slate-100">
+                <div class="card-header"><h3 class="card-title"><i class="bi bi-paperclip me-2"></i>Berkas Bukti ({{ $portofolio->bukti->count() }})</h3></div>
+                <ul class="list-group list-group-flush">
                     @forelse ($portofolio->bukti as $b)
                         @include('partials.bukti-item', ['b' => $b, 'bolehHapus' => $portofolio->bisaDieditMahasiswa()])
                     @empty
-                        <li class="px-5 py-4 text-sm text-slate-400">Belum ada berkas bukti.</li>
+                        <li class="list-group-item text-secondary">Belum ada berkas bukti.</li>
                     @endforelse
                 </ul>
                 @if ($portofolio->bisaDieditMahasiswa())
-                    <div class="border-t border-slate-100 px-5 py-4">
-                        <form method="POST" action="{{ route('portofolio.bukti.store', $portofolio) }}" enctype="multipart/form-data" class="flex gap-2">
+                    <div class="card-footer">
+                        <form method="POST" action="{{ route('portofolio.bukti.store', $portofolio) }}" enctype="multipart/form-data" class="d-flex gap-2">
                             @csrf
                             <input type="file" name="bukti[]" class="form-control form-control-sm" accept=".pdf,.jpg,.jpeg,.png" multiple required>
-                            <button class="btn btn-sm btn-maps"><i class="bi bi-upload"></i>Unggah</button>
+                            <button class="btn btn-sm btn-primary"><i class="bi bi-upload me-1"></i>Unggah</button>
                         </form>
                     </div>
                 @endif
             </div>
 
             <div class="card">
-                <div class="card-header"><i class="bi bi-clock-history"></i>Riwayat Verifikasi</div>
-                <ul class="divide-y divide-slate-100">
+                <div class="card-header"><h3 class="card-title"><i class="bi bi-clock-history me-2"></i>Riwayat Verifikasi</h3></div>
+                <ul class="list-group list-group-flush">
                     @forelse ($portofolio->verifikasi as $v)
-                        <li class="px-5 py-3">
-                            <div class="flex items-center justify-between gap-3">
-                                <span class="badge badge-{{ $v->hasilBadge() }}">{{ $v->hasilLabel() }}</span>
-                                <span class="text-xs text-slate-400">{{ $v->tanggal_verifikasi->format('d/m/Y H:i') }} · {{ $v->verifikator->username ?? '—' }}</span>
+                        <li class="list-group-item">
+                            <div class="d-flex align-items-center justify-content-between gap-3">
+                                <span class="badge bg-{{ $v->hasilBadge() }}-lt">{{ $v->hasilLabel() }}</span>
+                                <span class="text-secondary small">{{ $v->tanggal_verifikasi->format('d/m/Y H:i') }} · {{ $v->verifikator->username ?? '—' }}</span>
                             </div>
                             @if ($v->catatan)
-                                <div class="mt-1.5 text-sm text-slate-600"><i class="bi bi-chat-left-text"></i> {{ $v->catatan }}</div>
+                                <div class="mt-1"><i class="bi bi-chat-left-text me-1 text-secondary"></i>{{ $v->catatan }}</div>
                             @endif
                         </li>
                     @empty
-                        <li class="px-5 py-4 text-sm text-slate-400">Belum pernah diverifikasi.</li>
+                        <li class="list-group-item text-secondary">Belum pernah diverifikasi.</li>
                     @endforelse
                 </ul>
             </div>
         </div>
 
-        <div class="lg:col-span-4">
+        <div class="col-12 col-lg-4">
             <div class="card">
-                <div class="card-header"><i class="bi bi-sliders"></i>Aksi</div>
-                <div class="card-body grid gap-2">
+                <div class="card-header"><h3 class="card-title"><i class="bi bi-sliders me-2"></i>Aksi</h3></div>
+                <div class="card-body d-grid gap-2">
                     @if ($portofolio->bisaDiajukan())
                         <form method="POST" action="{{ route('portofolio.ajukan', $portofolio) }}">
                             @csrf
-                            <button class="btn btn-maps w-full"
+                            <button class="btn btn-primary w-100"
                                     onclick="return confirm('Ajukan entri ini untuk diverifikasi? Entri tidak dapat diubah selama proses verifikasi.')">
-                                <i class="bi bi-send"></i>Ajukan Verifikasi
+                                <i class="bi bi-send me-1"></i>Ajukan Verifikasi
                             </button>
                         </form>
                     @endif
 
                     @if ($portofolio->bisaDieditMahasiswa())
-                        <a href="{{ route('portofolio.edit', $portofolio) }}" class="btn btn-outline-primary w-full">
-                            <i class="bi bi-pencil"></i>Ubah Entri
+                        <a href="{{ route('portofolio.edit', $portofolio) }}" class="btn btn-outline-primary w-100">
+                            <i class="bi bi-pencil me-1"></i>Ubah Entri
                         </a>
                         <form method="POST" action="{{ route('portofolio.destroy', $portofolio) }}"
                               onsubmit="return confirm('Hapus portofolio ini beserta seluruh buktinya?')">
                             @csrf @method('DELETE')
-                            <button class="btn btn-outline-danger w-full"><i class="bi bi-trash"></i>Hapus Entri</button>
+                            <button class="btn btn-outline-danger w-100"><i class="bi bi-trash me-1"></i>Hapus Entri</button>
                         </form>
                     @endif
 
                     <form method="POST" action="{{ route('portofolio.publik', $portofolio) }}">
                         @csrf
-                        <button class="btn btn-outline w-full">
+                        <button class="btn btn-outline-secondary w-100">
                             @if ($portofolio->is_publik)
-                                <i class="bi bi-eye-slash"></i>Tarik dari Halaman Publik
+                                <i class="bi bi-eye-slash me-1"></i>Tarik dari Halaman Publik
                             @else
-                                <i class="bi bi-eye"></i>Setujui Tampil Publik
+                                <i class="bi bi-eye me-1"></i>Setujui Tampil Publik
                             @endif
                         </button>
                     </form>
 
                     @if ($portofolio->status === 'diajukan')
-                        <div class="alert alert-warning mb-0 mt-2 text-xs">
-                            <i class="bi bi-hourglass-split mt-0.5"></i>
-                            <span>Entri sedang menunggu verifikasi dan tidak dapat diubah.</span>
+                        <div class="alert alert-warning mb-0 mt-2" role="alert">
+                            <div class="d-flex gap-2">
+                                <i class="bi bi-hourglass-split"></i>
+                                <div>Entri sedang menunggu verifikasi dan tidak dapat diubah.</div>
+                            </div>
                         </div>
                     @endif
                 </div>

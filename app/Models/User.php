@@ -2,16 +2,13 @@
 
 namespace App\Models;
 
-use Filament\Models\Contracts\FilamentUser;
-use Filament\Models\Contracts\HasName;
-use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable implements FilamentUser, HasName
+class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
@@ -71,18 +68,5 @@ class User extends Authenticatable implements FilamentUser, HasName
     public function isMahasiswa(): bool
     {
         return $this->role === 'mahasiswa';
-    }
-
-    /**
-     * Panel Data Master (Filament) khusus admin prodi.
-     */
-    public function canAccessPanel(Panel $panel): bool
-    {
-        return $this->isAdmin() && $this->is_active;
-    }
-
-    public function getFilamentName(): string
-    {
-        return $this->username;
     }
 }

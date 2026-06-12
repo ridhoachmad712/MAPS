@@ -2,48 +2,53 @@
 
 @php
     $menuPublik = [
-        ['label' => 'Beranda', 'href' => route('showcase.index'), 'aktif' => request()->routeIs('showcase.index')],
-        ['label' => 'Capaian', 'href' => route('showcase.capaian'), 'aktif' => request()->routeIs('showcase.capaian')],
-        ['label' => 'Mahasiswa', 'href' => route('showcase.mahasiswa.indeks'), 'aktif' => request()->routeIs('showcase.mahasiswa.indeks', 'showcase.mahasiswa')],
-        ['label' => 'Statistik', 'href' => route('showcase.statistik'), 'aktif' => request()->routeIs('showcase.statistik')],
-        ['label' => 'Tentang', 'href' => route('showcase.tentang'), 'aktif' => request()->routeIs('showcase.tentang')],
+        ['label' => 'Beranda', 'ikon' => 'bi-house', 'href' => route('showcase.index'), 'aktif' => request()->routeIs('showcase.index')],
+        ['label' => 'Capaian', 'ikon' => 'bi-trophy', 'href' => route('showcase.capaian'), 'aktif' => request()->routeIs('showcase.capaian')],
+        ['label' => 'Mahasiswa', 'ikon' => 'bi-people', 'href' => route('showcase.mahasiswa.indeks'), 'aktif' => request()->routeIs('showcase.mahasiswa.indeks', 'showcase.mahasiswa')],
+        ['label' => 'Statistik', 'ikon' => 'bi-bar-chart', 'href' => route('showcase.statistik'), 'aktif' => request()->routeIs('showcase.statistik')],
+        ['label' => 'Tentang', 'ikon' => 'bi-info-circle', 'href' => route('showcase.tentang'), 'aktif' => request()->routeIs('showcase.tentang')],
     ];
+    $navbarTerang = \App\Support\PaletWarna::terang(\App\Models\Setting::get('warna_navbar'));
 @endphp
 
 @section('navbar')
-    <nav class="navbar-maps" x-data="{ menu: false }">
-        <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-3">
-            <a class="flex items-center gap-3" href="{{ route('showcase.index') }}">
+    <header class="navbar navbar-expand-md navbar-maps sticky-top d-print-none" data-bs-theme="{{ $navbarTerang ? 'light' : 'dark' }}">
+        <div class="container-xl">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu-publik"
+                    aria-controls="menu-publik" aria-expanded="false" aria-label="Buka menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <a class="navbar-brand d-flex align-items-center gap-2 pe-md-3" href="{{ route('showcase.index') }}">
                 <img src="{{ \App\Models\Setting::get('logo') ? asset('storage/'.\App\Models\Setting::get('logo')) : asset('favicon.svg') }}"
-                     alt="Logo {{ \App\Models\Setting::get('nama_aplikasi') }}" class="h-10 w-10 rounded-lg object-contain">
-                <span class="leading-tight">
-                    <span class="navbar-judul block text-sm font-bold sm:text-base">{{ \App\Models\Setting::get('nama_aplikasi') }}</span>
-                    <span class="navbar-sub block text-xs">{{ \App\Models\Setting::get('nama_pemilik') }}</span>
+                     alt="Logo {{ \App\Models\Setting::get('nama_aplikasi') }}" width="40" height="40" class="rounded">
+                <span class="lh-sm">
+                    <span class="d-block fw-bold">{{ \App\Models\Setting::get('nama_aplikasi') }}</span>
+                    <span class="d-block fs-5 text-secondary">{{ \App\Models\Setting::get('nama_pemilik') }}</span>
                 </span>
             </a>
 
-            <button class="navbar-toggle rounded-lg px-3 py-1.5 md:hidden" @click="menu = !menu" aria-label="Buka menu">
-                <i class="bi" :class="menu ? 'bi-x-lg' : 'bi-list'"></i>
-            </button>
-
-            <div class="w-full md:flex md:w-auto md:items-center" :class="menu ? 'block' : 'hidden md:flex'">
-                <ul class="flex flex-col gap-1 py-2 md:flex-row md:items-center md:py-0">
+            <div class="collapse navbar-collapse" id="menu-publik">
+                <ul class="navbar-nav ms-md-auto">
                     @foreach ($menuPublik as $item)
-                        <li>
-                            <a class="nav-link-maps {{ $item['aktif'] ? 'aktif' : '' }}" href="{{ $item['href'] }}">{{ $item['label'] }}</a>
+                        <li class="nav-item {{ $item['aktif'] ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ $item['href'] }}" @if ($item['aktif']) aria-current="page" @endif>
+                                <span class="nav-link-icon d-md-none d-lg-inline-flex"><i class="bi {{ $item['ikon'] }}"></i></span>
+                                <span class="nav-link-title">{{ $item['label'] }}</span>
+                            </a>
                         </li>
                     @endforeach
-                    <li class="md:ml-2">
-                        @auth
-                            <a class="btn btn-sm btn-maps" href="{{ route('dashboard') }}"><i class="bi bi-speedometer2"></i>Dasbor</a>
-                        @else
-                            <a class="btn btn-sm btn-maps" href="{{ route('login') }}"><i class="bi bi-box-arrow-in-right"></i>Masuk</a>
-                        @endauth
-                    </li>
                 </ul>
+                <div class="ms-md-3 my-2 my-md-0">
+                    @auth
+                        <a class="btn btn-primary w-100" href="{{ route('dashboard') }}"><i class="bi bi-speedometer2 me-1"></i>Dasbor</a>
+                    @else
+                        <a class="btn btn-primary w-100" href="{{ route('login') }}"><i class="bi bi-box-arrow-in-right me-1"></i>Masuk</a>
+                    @endauth
+                </div>
             </div>
         </div>
-    </nav>
+    </header>
 @endsection
 
 @section('isi')

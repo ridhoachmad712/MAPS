@@ -20,14 +20,14 @@ class ShowcaseController extends Controller
         $sorotan = Portofolio::publik()
             ->with(['mahasiswa', 'kategori'])
             ->whereIn('level', ['internasional', 'nasional'])
-            ->orderByRaw("FIELD(level, 'internasional', 'nasional')")
+            ->orderByRaw("CASE level WHEN 'internasional' THEN 1 WHEN 'nasional' THEN 2 ELSE 0 END")
             ->orderByDesc('tahun_pencapaian')
             ->take(3)
             ->get();
 
         $mahasiswaTop = Mahasiswa::where('konsen_publik', true)
             ->withCount(['portofolio as total_publik' => fn ($q) => $q->publik()])
-            ->having('total_publik', '>', 0)
+            ->whereHas('portofolio', fn ($q) => $q->publik())
             ->orderByDesc('total_publik')
             ->take(6)
             ->get();
@@ -63,12 +63,12 @@ class ShowcaseController extends Controller
             ->when($request->input('urut') === 'tahun_naik', fn ($q) => $q->orderBy('tahun_pencapaian'))
             ->when($request->input('urut') === 'tahun_turun', fn ($q) => $q->orderByDesc('tahun_pencapaian'))
             ->when($request->input('urut') === 'level_naik', fn ($q) => $q
-                ->orderByRaw("FIELD(level, 'regional', 'nasional', 'internasional')"))
+                ->orderByRaw("CASE level WHEN 'regional' THEN 1 WHEN 'nasional' THEN 2 WHEN 'internasional' THEN 3 ELSE 0 END"))
             ->when($request->input('urut') === 'level_turun', fn ($q) => $q
-                ->orderByRaw("FIELD(level, 'regional', 'nasional', 'internasional') DESC"))
+                ->orderByRaw("CASE level WHEN 'regional' THEN 1 WHEN 'nasional' THEN 2 WHEN 'internasional' THEN 3 ELSE 0 END DESC"))
             ->when(! in_array($request->input('urut'), ['tahun_naik', 'tahun_turun', 'level_naik', 'level_turun']), fn ($q) => $q
                 ->orderByDesc('tahun_pencapaian')
-                ->orderByRaw("FIELD(level, 'internasional', 'nasional', 'regional')"))
+                ->orderByRaw("CASE level WHEN 'internasional' THEN 1 WHEN 'nasional' THEN 2 WHEN 'regional' THEN 3 ELSE 0 END"))
             ->paginate(15)
             ->withQueryString();
 
@@ -99,7 +99,7 @@ class ShowcaseController extends Controller
     {
         $mahasiswa = Mahasiswa::where('konsen_publik', true)
             ->withCount(['portofolio as total_publik' => fn ($q) => $q->publik()])
-            ->having('total_publik', '>', 0)
+            ->whereHas('portofolio', fn ($q) => $q->publik())
             ->when($request->filled('q'), fn ($q) => $q->where('nama_lengkap', 'like', '%'.$request->input('q').'%'))
             ->when($request->filled('angkatan'), fn ($q) => $q->where('angkatan', $request->input('angkatan')))
             ->orderByDesc('total_publik')

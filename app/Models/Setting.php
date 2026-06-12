@@ -24,11 +24,11 @@ class Setting extends Model
         'tagline' => 'Management Student Achievement Portfolio System',
         'logo' => '',
 
-        // Warna
-        'warna_primer' => '#1e3a8a',
-        'warna_hero' => '#1e3a8a',
+        // Warna (bawaan mengikuti palet default Tabler)
+        'warna_primer' => '#066fd1',
+        'warna_hero' => '#066fd1',
         'warna_navbar' => '#ffffff',
-        'warna_footer' => '#111827',
+        'warna_footer' => '#f9fafb',
 
         // Hero beranda
         'hero_eyebrow' => 'Prodi Manajemen · FEB · Universitas Negeri Makassar',

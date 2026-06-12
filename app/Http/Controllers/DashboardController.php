@@ -82,7 +82,7 @@ class DashboardController extends Controller
 
         $topMahasiswa = Mahasiswa::query()
             ->withCount(['portofolio as total_terverifikasi' => fn ($q) => $q->terverifikasi()])
-            ->having('total_terverifikasi', '>', 0)
+            ->whereHas('portofolio', fn ($q) => $q->terverifikasi())
             ->orderByDesc('total_terverifikasi')
             ->take(10)
             ->get();

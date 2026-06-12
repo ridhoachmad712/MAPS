@@ -3,20 +3,28 @@
 @section('judul', 'Akun Petugas')
 
 @section('konten')
-    <div class="mb-6 flex flex-wrap items-center justify-between gap-3" x-data="{ modalTambah: false }">
-        <h1 class="text-xl font-extrabold text-navy-700">Akun Petugas (Admin &amp; Verifikator)</h1>
-        <button class="btn btn-maps" @click="modalTambah = true">
-            <i class="bi bi-person-plus"></i>Tambah Petugas
-        </button>
+    <div class="page-header mb-4">
+        <div class="row align-items-center g-2">
+            <div class="col">
+                <h1 class="page-title">Akun Petugas (Admin &amp; Verifikator)</h1>
+            </div>
+            <div class="col-auto">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-tambah-petugas">
+                    <i class="bi bi-person-plus me-1"></i>Tambah Petugas
+                </button>
+            </div>
+        </div>
+    </div>
 
-        <div x-show="modalTambah" x-transition.opacity.duration.150ms x-cloak class="modal-backdrop" @click.self="modalTambah = false">
-            <form method="POST" action="{{ route('admin.pengguna.store') }}" class="modal-box" @keydown.escape.window="modalTambah = false">
+    <div class="modal fade" id="modal-tambah-petugas" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <form method="POST" action="{{ route('admin.pengguna.store') }}" class="modal-content">
                 @csrf
-                <div class="flex items-center justify-between border-b border-slate-100 px-5 py-4">
-                    <h2 class="font-bold text-navy-700">Tambah Akun Petugas</h2>
-                    <button type="button" class="text-slate-400 hover:text-slate-600" @click="modalTambah = false"><i class="bi bi-x-lg"></i></button>
+                <div class="modal-header">
+                    <h2 class="modal-title">Tambah Akun Petugas</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                 </div>
-                <div class="space-y-4 px-5 py-4">
+                <div class="modal-body d-grid gap-3">
                     <div>
                         <label class="form-label">Nama Pengguna</label>
                         <input type="text" name="username" class="form-control" placeholder="tanpa spasi" required>
@@ -37,17 +45,17 @@
                         <input type="text" name="password" class="form-control" required minlength="8">
                     </div>
                 </div>
-                <div class="flex justify-end gap-2 border-t border-slate-100 px-5 py-4">
-                    <button type="button" class="px-3 text-sm text-slate-500 hover:text-slate-700" @click="modalTambah = false">Batal</button>
-                    <button class="btn btn-maps">Buat Akun</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-link link-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button class="btn btn-primary">Buat Akun</button>
                 </div>
             </form>
         </div>
     </div>
 
     <div class="card">
-        <div class="overflow-x-auto">
-            <table class="table-maps">
+        <div class="table-responsive">
+            <table class="table table-vcenter card-table">
                 <thead>
                     <tr>
                         <th>Nama Pengguna</th>
@@ -55,58 +63,60 @@
                         <th>Peran</th>
                         <th>Status</th>
                         <th>Dibuat</th>
-                        <th class="text-right">Aksi</th>
+                        <th class="text-end">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($pengguna as $u)
-                        <tr x-data="{ modalReset: false }">
-                            <td class="font-semibold">{{ $u->username }}</td>
+                        <tr>
+                            <td class="fw-semibold">{{ $u->username }}</td>
                             <td>{{ $u->email }}</td>
                             <td>
-                                <span class="badge {{ $u->role === 'admin' ? 'badge-navy' : 'badge-info' }} uppercase">{{ $u->role }}</span>
+                                <span class="badge {{ $u->role === 'admin' ? 'bg-primary text-primary-fg' : 'bg-info-lt' }} text-uppercase">{{ $u->role }}</span>
                             </td>
                             <td>
                                 @if ($u->is_active)
-                                    <span class="badge badge-success">Aktif</span>
+                                    <span class="badge bg-success-lt">Aktif</span>
                                 @else
-                                    <span class="badge badge-danger">Nonaktif</span>
+                                    <span class="badge bg-danger-lt">Nonaktif</span>
                                 @endif
                             </td>
-                            <td class="text-xs text-slate-500">{{ $u->created_at?->format('d/m/Y') }}</td>
+                            <td class="text-secondary small">{{ $u->created_at?->format('d/m/Y') }}</td>
                             <td>
-                                <div class="flex justify-end gap-1.5">
-                                    <button class="btn btn-sm btn-outline" @click="modalReset = true" title="Reset kata sandi">
+                                <div class="d-flex justify-content-end gap-1">
+                                    <button class="btn btn-sm btn-outline-secondary btn-icon" data-bs-toggle="modal"
+                                            data-bs-target="#modal-reset-{{ $u->user_id }}" title="Reset kata sandi" aria-label="Reset kata sandi">
                                         <i class="bi bi-key"></i>
                                     </button>
                                     @if ($u->user_id !== auth()->id())
                                         <form method="POST" action="{{ route('admin.pengguna.toggle', $u) }}">
                                             @csrf
-                                            <button class="btn btn-sm {{ $u->is_active ? 'btn-outline-danger' : 'btn-outline-success' }}"
-                                                    title="{{ $u->is_active ? 'Nonaktifkan' : 'Aktifkan' }}">
+                                            <button class="btn btn-sm {{ $u->is_active ? 'btn-outline-danger' : 'btn-outline-success' }} btn-icon"
+                                                    title="{{ $u->is_active ? 'Nonaktifkan' : 'Aktifkan' }}" aria-label="{{ $u->is_active ? 'Nonaktifkan' : 'Aktifkan' }}">
                                                 <i class="bi {{ $u->is_active ? 'bi-person-x' : 'bi-person-check' }}"></i>
                                             </button>
                                         </form>
                                     @endif
                                 </div>
 
-                                <div x-show="modalReset" x-transition.opacity.duration.150ms x-cloak class="modal-backdrop" @click.self="modalReset = false">
-                                    <form method="POST" action="{{ route('admin.pengguna.reset', $u) }}" class="modal-box text-left"
-                                          @keydown.escape.window="modalReset = false">
-                                        @csrf
-                                        <div class="flex items-center justify-between border-b border-slate-100 px-5 py-4">
-                                            <h2 class="font-bold text-navy-700">Reset Kata Sandi: {{ $u->username }}</h2>
-                                            <button type="button" class="text-slate-400 hover:text-slate-600" @click="modalReset = false"><i class="bi bi-x-lg"></i></button>
-                                        </div>
-                                        <div class="px-5 py-4">
-                                            <label class="form-label">Kata Sandi Baru (min. 8 karakter)</label>
-                                            <input type="text" name="password" class="form-control" required minlength="8">
-                                        </div>
-                                        <div class="flex justify-end gap-2 border-t border-slate-100 px-5 py-4">
-                                            <button type="button" class="px-3 text-sm text-slate-500 hover:text-slate-700" @click="modalReset = false">Batal</button>
-                                            <button class="btn btn-maps">Reset</button>
-                                        </div>
-                                    </form>
+                                <div class="modal fade" id="modal-reset-{{ $u->user_id }}" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <form method="POST" action="{{ route('admin.pengguna.reset', $u) }}" class="modal-content text-start">
+                                            @csrf
+                                            <div class="modal-header">
+                                                <h2 class="modal-title">Reset Kata Sandi: {{ $u->username }}</h2>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <label class="form-label">Kata Sandi Baru (min. 8 karakter)</label>
+                                                <input type="text" name="password" class="form-control" required minlength="8">
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-link link-secondary" data-bs-dismiss="modal">Batal</button>
+                                                <button class="btn btn-primary">Reset</button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </td>
                         </tr>

@@ -3,51 +3,55 @@
 @section('judul', 'Profil Saya')
 
 @section('konten')
-    <h1 class="mb-6 text-xl font-extrabold text-navy-700">Profil Saya</h1>
+    <div class="page-header mb-4">
+        <h1 class="page-title">Profil Saya</h1>
+    </div>
 
-    <div class="grid gap-4 lg:grid-cols-12">
-        <div class="lg:col-span-7">
+    <div class="row g-3">
+        <div class="col-12 col-lg-7">
             <div class="card">
-                <div class="card-header"><i class="bi bi-person-circle"></i>Data Profil</div>
-                <div class="card-body p-6">
-                    <div class="mb-6 flex items-center gap-4">
+                <div class="card-header"><h3 class="card-title"><i class="bi bi-person-circle me-2"></i>Data Profil</h3></div>
+                <div class="card-body">
+                    <div class="d-flex align-items-center gap-3 mb-4">
                         @if ($mahasiswa->foto)
-                            <img src="{{ asset('storage/'.$mahasiswa->foto) }}" alt="Foto profil" class="foto-avatar-besar">
+                            <span class="avatar avatar-xl rounded-circle" style="background-image: url('{{ asset('storage/'.$mahasiswa->foto) }}')"></span>
                         @else
-                            <span class="avatar-inisial-besar">{{ strtoupper(substr($mahasiswa->nama_lengkap, 0, 1)) }}</span>
+                            <span class="avatar avatar-xl rounded-circle">{{ strtoupper(substr($mahasiswa->nama_lengkap, 0, 1)) }}</span>
                         @endif
                         <div>
-                            <div class="text-lg font-bold text-navy-700">{{ $mahasiswa->nama_lengkap }}</div>
-                            <div class="text-sm text-slate-500">{{ $mahasiswa->nim }} · Angkatan {{ $mahasiswa->angkatan }}</div>
-                            <div class="text-xs text-slate-400">{{ $mahasiswa->program_studi }}, FEB UNM</div>
+                            <div class="h3 mb-0">{{ $mahasiswa->nama_lengkap }}</div>
+                            <div class="text-secondary">{{ $mahasiswa->nim }} · Angkatan {{ $mahasiswa->angkatan }}</div>
+                            <div class="text-secondary small">{{ $mahasiswa->program_studi }}, FEB UNM</div>
                         </div>
                     </div>
 
-                    <form method="POST" action="{{ route('profil.update') }}" enctype="multipart/form-data" class="space-y-4">
+                    <form method="POST" action="{{ route('profil.update') }}" enctype="multipart/form-data" class="d-grid gap-3">
                         @csrf @method('PUT')
                         <div>
                             <label class="form-label">Ganti Foto Profil (JPG/PNG, maks 2 MB)</label>
                             <input type="file" name="foto" class="form-control @error('foto') is-invalid @enderror" accept=".jpg,.jpeg,.png">
                             @error('foto')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
-                        <label class="flex items-start gap-2.5">
-                            <input class="form-check-input mt-1" type="checkbox" name="konsen_publik" value="1" @checked($mahasiswa->konsen_publik)>
-                            <span class="text-sm">
+                        <label class="form-check mb-0">
+                            <input class="form-check-input" type="checkbox" name="konsen_publik" value="1" @checked($mahasiswa->konsen_publik)>
+                            <span class="form-check-label">
                                 <strong>Persetujuan tampil publik</strong><br>
-                                <span class="text-slate-500">Izinkan nama dan capaian terverifikasi saya ditampilkan di halaman showcase publik.</span>
+                                <span class="text-secondary">Izinkan nama dan capaian terverifikasi saya ditampilkan di halaman showcase publik.</span>
                             </span>
                         </label>
-                        <button class="btn btn-maps"><i class="bi bi-save"></i>Simpan Profil</button>
+                        <div>
+                            <button class="btn btn-primary"><i class="bi bi-save me-1"></i>Simpan Profil</button>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
 
-        <div class="lg:col-span-5">
+        <div class="col-12 col-lg-5">
             <div class="card">
-                <div class="card-header"><i class="bi bi-shield-lock"></i>Ganti Kata Sandi</div>
-                <div class="card-body p-6">
-                    <form method="POST" action="{{ route('profil.password') }}" class="space-y-4">
+                <div class="card-header"><h3 class="card-title"><i class="bi bi-shield-lock me-2"></i>Ganti Kata Sandi</h3></div>
+                <div class="card-body">
+                    <form method="POST" action="{{ route('profil.password') }}" class="d-grid gap-3">
                         @csrf @method('PUT')
                         <div>
                             <label class="form-label">Kata Sandi Lama</label>
@@ -63,7 +67,9 @@
                             <label class="form-label">Ulangi Kata Sandi Baru</label>
                             <input type="password" name="password_confirmation" class="form-control" required>
                         </div>
-                        <button class="btn btn-outline"><i class="bi bi-key"></i>Ganti Kata Sandi</button>
+                        <div>
+                            <button class="btn btn-outline-secondary"><i class="bi bi-key me-1"></i>Ganti Kata Sandi</button>
+                        </div>
                     </form>
                 </div>
             </div>

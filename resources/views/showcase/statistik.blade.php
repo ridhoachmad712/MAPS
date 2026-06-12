@@ -5,61 +5,83 @@
 @section('deskripsi', 'Statistik capaian mahasiswa Prodi Manajemen FEB UNM: '.$statistik['total_capaian'].' capaian terverifikasi — distribusi per kategori, level, angkatan, dan tren per tahun.')
 
 @section('konten')
-    <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <div class="container-xl py-4">
 
-        <div class="mb-6 flex flex-wrap items-end justify-between gap-3">
-            <div>
-                <h1 class="text-2xl font-extrabold tracking-tight text-navy-700">Statistik Capaian</h1>
-                <p class="mt-1 text-sm text-slate-500">
-                    Seluruh angka dihitung otomatis dari entri yang telah diverifikasi program studi.
-                </p>
-            </div>
+        <div class="page-header mb-4">
+            <h1 class="page-title">Statistik Capaian</h1>
+            <p class="text-secondary mb-0">
+                Seluruh angka dihitung otomatis dari entri yang telah diverifikasi program studi.
+            </p>
         </div>
 
         {{-- Baris metrik --}}
-        <div class="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
-            <div class="card px-5 py-4">
-                <div class="text-xs font-semibold uppercase tracking-wider text-slate-400">Capaian terverifikasi</div>
-                <div class="mt-1 text-3xl font-extrabold text-navy-700">{{ $statistik['total_capaian'] }}</div>
+        <div class="row row-cards row-cols-2 row-cols-lg-4 mb-3">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="subheader">Capaian terverifikasi</div>
+                        <div class="h1 mb-0 mt-1">{{ $statistik['total_capaian'] }}</div>
+                    </div>
+                </div>
             </div>
-            <div class="card px-5 py-4">
-                <div class="text-xs font-semibold uppercase tracking-wider text-slate-400">Mahasiswa berprestasi</div>
-                <div class="mt-1 text-3xl font-extrabold text-navy-700">{{ $statistik['mahasiswa_berprestasi'] }}</div>
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="subheader">Mahasiswa berprestasi</div>
+                        <div class="h1 mb-0 mt-1">{{ $statistik['mahasiswa_berprestasi'] }}</div>
+                    </div>
+                </div>
             </div>
-            <div class="card px-5 py-4">
-                <div class="text-xs font-semibold uppercase tracking-wider text-slate-400">Tingkat nasional</div>
-                <div class="mt-1 text-3xl font-extrabold text-navy-700">{{ $statistik['nasional'] }}</div>
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="subheader">Tingkat nasional</div>
+                        <div class="h1 mb-0 mt-1">{{ $statistik['nasional'] }}</div>
+                    </div>
+                </div>
             </div>
-            <div class="card px-5 py-4">
-                <div class="text-xs font-semibold uppercase tracking-wider text-slate-400">Tingkat internasional</div>
-                <div class="mt-1 text-3xl font-extrabold text-navy-700">{{ $statistik['internasional'] }}</div>
-            </div>
-        </div>
-
-        <div class="mb-4 grid gap-4 lg:grid-cols-12">
-            <div class="card lg:col-span-7">
-                <div class="card-header text-sm"><i class="bi bi-bar-chart-fill"></i>Capaian per kategori</div>
-                <div class="relative h-72 px-4 py-3"><canvas id="grafikKategori"></canvas></div>
-            </div>
-            <div class="card lg:col-span-5">
-                <div class="card-header text-sm"><i class="bi bi-pie-chart-fill"></i>Distribusi per level</div>
-                <div class="relative h-72 px-4 py-3"><canvas id="grafikLevel"></canvas></div>
-            </div>
-        </div>
-
-        <div class="grid gap-4 lg:grid-cols-2">
-            <div class="card">
-                <div class="card-header text-sm"><i class="bi bi-graph-up-arrow"></i>Tren capaian per tahun</div>
-                <div class="relative h-64 px-4 py-3"><canvas id="grafikTren"></canvas></div>
-            </div>
-            <div class="card">
-                <div class="card-header text-sm"><i class="bi bi-people"></i>Capaian per angkatan</div>
-                <div class="relative h-64 px-4 py-3"><canvas id="grafikAngkatan"></canvas></div>
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="subheader">Tingkat internasional</div>
+                        <div class="h1 mb-0 mt-1">{{ $statistik['internasional'] }}</div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <p class="mt-6 text-center text-xs text-slate-400">
-            <i class="bi bi-patch-check"></i>
+        <div class="row row-cards mb-3">
+            <div class="col-12 col-lg-7">
+                <div class="card">
+                    <div class="card-header"><h3 class="card-title"><i class="bi bi-bar-chart-fill me-2"></i>Capaian per kategori</h3></div>
+                    <div class="card-body position-relative" style="height: 18rem;"><canvas id="grafikKategori"></canvas></div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-5">
+                <div class="card">
+                    <div class="card-header"><h3 class="card-title"><i class="bi bi-pie-chart-fill me-2"></i>Distribusi per level</h3></div>
+                    <div class="card-body position-relative" style="height: 18rem;"><canvas id="grafikLevel"></canvas></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-cards">
+            <div class="col-12 col-lg-6">
+                <div class="card">
+                    <div class="card-header"><h3 class="card-title"><i class="bi bi-graph-up-arrow me-2"></i>Tren capaian per tahun</h3></div>
+                    <div class="card-body position-relative" style="height: 16rem;"><canvas id="grafikTren"></canvas></div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6">
+                <div class="card">
+                    <div class="card-header"><h3 class="card-title"><i class="bi bi-people me-2"></i>Capaian per angkatan</h3></div>
+                    <div class="card-body position-relative" style="height: 16rem;"><canvas id="grafikAngkatan"></canvas></div>
+                </div>
+            </div>
+        </div>
+
+        <p class="text-center text-secondary small mt-4 mb-0">
+            <i class="bi bi-patch-check me-1"></i>
             Hanya entri berstatus terverifikasi yang dihitung dalam statistik resmi ini.
         </p>
     </div>
@@ -68,11 +90,17 @@
 @push('js')
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 <script>
+    const gayaAkar = getComputedStyle(document.documentElement);
+    const warnaPrimer = gayaAkar.getPropertyValue('--tblr-primary').trim() || '#066fd1';
+    const warnaPrimerMuda = gayaAkar.getPropertyValue('--primer-400').trim() || warnaPrimer;
+    const warnaPrimerPucat = gayaAkar.getPropertyValue('--primer-200').trim() || warnaPrimer;
+    const warnaPrimerRgb = gayaAkar.getPropertyValue('--tblr-primary-rgb').trim() || '6, 111, 209';
+
     Chart.defaults.font.family = getComputedStyle(document.body).fontFamily;
-    Chart.defaults.color = '#64748b';
+    Chart.defaults.color = '#667382';
 
     const tooltipMaps = {
-        backgroundColor: '#172c68',
+        backgroundColor: warnaPrimer,
         padding: 10,
         cornerRadius: 8,
         displayColors: false,
@@ -92,7 +120,7 @@
             labels: @json($perKategori->pluck('nama_kategori')),
             datasets: [{
                 data: @json($perKategori->pluck('total')),
-                backgroundColor: '#1e3a8a',
+                backgroundColor: warnaPrimer,
                 borderRadius: 6,
             }],
         },
@@ -105,7 +133,7 @@
             labels: ['Regional', 'Nasional', 'Internasional'],
             datasets: [{
                 data: [{{ $perLevel['regional'] ?? 0 }}, {{ $perLevel['nasional'] ?? 0 }}, {{ $perLevel['internasional'] ?? 0 }}],
-                backgroundColor: ['#b9c9eb', '#5577c0', '#1e3a8a'],
+                backgroundColor: [warnaPrimerPucat, warnaPrimerMuda, warnaPrimer],
             }],
         },
         options: {
@@ -124,8 +152,8 @@
             labels: @json($trenTahun->keys()),
             datasets: [{
                 data: @json($trenTahun->values()),
-                borderColor: '#1e3a8a',
-                backgroundColor: 'rgba(30,58,138,.1)',
+                borderColor: warnaPrimer,
+                backgroundColor: `rgba(${warnaPrimerRgb}, .1)`,
                 fill: true,
                 tension: .3,
                 pointRadius: 3,
@@ -140,7 +168,7 @@
             labels: @json($perAngkatan->keys()->map(fn ($a) => 'Angkatan '.$a)),
             datasets: [{
                 data: @json($perAngkatan->values()),
-                backgroundColor: '#5577c0',
+                backgroundColor: warnaPrimerMuda,
                 borderRadius: 5,
             }],
         },

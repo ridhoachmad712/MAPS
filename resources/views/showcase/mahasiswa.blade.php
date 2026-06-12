@@ -26,75 +26,76 @@
 @endpush
 
 @section('konten')
-    <div class="mx-auto max-w-7xl px-4 py-6">
-        <nav class="mb-4 text-sm text-slate-500">
-            <a href="{{ route('showcase.mahasiswa.indeks') }}" class="hover:text-navy-700 hover:underline">Mahasiswa</a>
-            <span class="mx-1.5">/</span>
-            <span class="text-slate-700">{{ $mahasiswa->nama_lengkap }}</span>
-        </nav>
+    <div class="container-xl py-4">
+        <ol class="breadcrumb mb-3" aria-label="breadcrumbs">
+            <li class="breadcrumb-item"><a href="{{ route('showcase.mahasiswa.indeks') }}">Mahasiswa</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ $mahasiswa->nama_lengkap }}</li>
+        </ol>
 
         {{-- Kartu identitas --}}
-        <div class="card mb-5">
-            <div class="flex flex-col items-center gap-5 p-6 sm:flex-row">
+        <div class="card mb-4">
+            <div class="card-body d-flex flex-column flex-sm-row align-items-center gap-4">
                 @if ($mahasiswa->foto)
-                    <img src="{{ asset('storage/'.$mahasiswa->foto) }}" alt="Foto {{ $mahasiswa->nama_lengkap }}" class="foto-avatar-besar">
+                    <span class="avatar avatar-xl rounded-circle" style="background-image: url('{{ asset('storage/'.$mahasiswa->foto) }}')"></span>
                 @else
-                    <span class="avatar-inisial-besar">{{ strtoupper(substr($mahasiswa->nama_lengkap, 0, 1)) }}</span>
+                    <span class="avatar avatar-xl rounded-circle">{{ strtoupper(substr($mahasiswa->nama_lengkap, 0, 1)) }}</span>
                 @endif
-                <div class="text-center sm:text-left">
-                    <h1 class="text-2xl font-extrabold tracking-tight text-navy-700">{{ $mahasiswa->nama_lengkap }}</h1>
-                    <p class="mt-1 text-sm text-slate-500">
+                <div class="text-center text-sm-start">
+                    <h1 class="h2 mb-1">{{ $mahasiswa->nama_lengkap }}</h1>
+                    <p class="text-secondary mb-2">
                         {{ $mahasiswa->nimSamar() }} · Angkatan {{ $mahasiswa->angkatan }} · {{ $mahasiswa->program_studi }}, FEB UNM
                     </p>
-                    <p class="mt-2">
-                        <span class="badge badge-primary">
-                            <i class="bi bi-patch-check"></i>{{ $entri->count() }} capaian terverifikasi
-                        </span>
-                    </p>
+                    <span class="badge bg-blue-lt">
+                        <i class="bi bi-patch-check me-1"></i>{{ $entri->count() }} capaian terverifikasi
+                    </span>
                 </div>
             </div>
         </div>
 
         {{-- Ringkasan capaian: COUNT otomatis per kategori --}}
-        <div class="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-4 xl:grid-cols-6">
+        <div class="row row-cards row-cols-2 row-cols-sm-4 row-cols-xl-6 mb-4">
             @foreach ($perKategori as $k)
-                <div class="card text-center">
-                    <div class="px-3 py-4">
-                        <div class="text-2xl font-extrabold text-navy-700">{{ $k->total }}</div>
-                        <div class="text-xs text-slate-500">{{ $k->nama_kategori }}</div>
+                <div class="col d-flex">
+                    <div class="card w-100 text-center">
+                        <div class="card-body py-3">
+                            <div class="h1 mb-0">{{ $k->total }}</div>
+                            <div class="text-secondary small">{{ $k->nama_kategori }}</div>
+                        </div>
                     </div>
                 </div>
             @endforeach
         </div>
 
-        <h2 class="mb-5 text-lg font-extrabold text-navy-700">Rekam Jejak Capaian Terverifikasi</h2>
+        <h2 class="h2 mb-3">Rekam Jejak Capaian Terverifikasi</h2>
 
         {{-- Dikelompokkan per tahun pencapaian, terbaru dulu --}}
         @foreach ($entri->groupBy('tahun_pencapaian') as $tahun => $entriTahun)
-            <div class="mb-7">
-                <div class="mb-4 flex items-center gap-3">
-                    <span class="badge badge-navy px-3.5 py-1.5 text-sm">{{ $tahun }}</span>
-                    <span class="text-xs text-slate-400">{{ $entriTahun->count() }} capaian</span>
-                    <span class="h-px flex-1 bg-slate-200"></span>
+            <div class="mb-4">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <span class="badge bg-primary text-primary-fg fs-5 px-3 py-2">{{ $tahun }}</span>
+                    <span class="text-secondary small">{{ $entriTahun->count() }} capaian</span>
+                    <span class="border-top flex-fill"></span>
                 </div>
-                <div class="grid gap-4 md:grid-cols-2">
+                <div class="row row-cards">
                     @foreach ($entriTahun as $p)
-                        <div class="card card-hover">
-                            <div class="card-body">
-                                <div class="mb-2.5 flex items-start justify-between gap-2">
-                                    <span class="badge badge-soft">{{ $p->kategori->nama_kategori }}</span>
-                                    <span class="badge badge-level-{{ $p->level }}">{{ $p->levelLabel() }}</span>
+                        <div class="col-12 col-md-6 d-flex">
+                            <div class="card w-100">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-start justify-content-between gap-2 mb-2">
+                                        <span class="badge bg-secondary-lt">{{ $p->kategori->nama_kategori }}</span>
+                                        <span class="badge bg-{{ $p->levelBadge() }}-lt">{{ $p->levelLabel() }}</span>
+                                    </div>
+                                    <h3 class="card-title mb-1">{{ $p->judul }}</h3>
+                                    <div class="text-secondary small">
+                                        {{ $p->penyelenggara ?: 'Penyelenggara tidak dicantumkan' }}
+                                    </div>
+                                    @if ($p->peran_capaian)
+                                        <div class="mt-1"><i class="bi bi-award text-secondary me-1"></i>{{ $p->peran_capaian }}</div>
+                                    @endif
+                                    @if ($p->deskripsi)
+                                        <p class="text-secondary mt-2 mb-0">{{ $p->deskripsi }}</p>
+                                    @endif
                                 </div>
-                                <h3 class="mb-1 font-bold text-navy-700">{{ $p->judul }}</h3>
-                                <div class="text-xs text-slate-500">
-                                    {{ $p->penyelenggara ?: 'Penyelenggara tidak dicantumkan' }}
-                                </div>
-                                @if ($p->peran_capaian)
-                                    <div class="mt-1.5 text-sm"><i class="bi bi-award text-slate-400"></i> {{ $p->peran_capaian }}</div>
-                                @endif
-                                @if ($p->deskripsi)
-                                    <p class="mt-2 text-sm text-slate-500">{{ $p->deskripsi }}</p>
-                                @endif
                             </div>
                         </div>
                     @endforeach

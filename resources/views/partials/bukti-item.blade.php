@@ -1,24 +1,22 @@
 {{-- Satu baris berkas bukti dengan thumbnail + pratinjau sematan. Variabel: $b (Bukti), $bolehHapus (bool) --}}
-<li class="px-5 py-3" x-data="{ pratinjau: false }">
-    <div class="flex items-center justify-between gap-3">
-        <div class="flex min-w-0 items-center gap-3">
+<li class="list-group-item">
+    <div class="d-flex align-items-center justify-content-between gap-3">
+        <div class="d-flex align-items-center gap-3 min-width-0">
             @if ($b->isGambar())
-                <img src="{{ route('bukti.show', $b) }}" alt="" loading="lazy"
-                     class="h-10 w-10 flex-shrink-0 rounded-lg border border-slate-200 object-cover">
+                <span class="avatar rounded" style="background-image: url('{{ route('bukti.show', $b) }}')"></span>
             @else
-                <span class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-500">
-                    <i class="bi bi-file-pdf"></i>
-                </span>
+                <span class="avatar rounded bg-secondary-lt"><i class="bi bi-file-pdf"></i></span>
             @endif
-            <a href="{{ route('bukti.show', $b) }}" target="_blank" class="truncate text-sm font-medium text-navy-700 hover:underline">
+            <a href="{{ route('bukti.show', $b) }}" target="_blank" class="text-truncate fw-medium">
                 {{ $b->nama_file }}
             </a>
         </div>
-        <div class="flex flex-shrink-0 items-center gap-2">
-            <span class="hidden text-xs text-slate-400 sm:inline">{{ $b->uploaded_at->format('d/m/Y') }}</span>
-            <button type="button" class="btn btn-sm btn-outline" @click="pratinjau = !pratinjau">
-                <i class="bi" :class="pratinjau ? 'bi-chevron-up' : 'bi-eye'"></i>
-                <span class="hidden sm:inline" x-text="pratinjau ? 'Tutup' : 'Pratinjau'">Pratinjau</span>
+        <div class="d-flex align-items-center gap-2 flex-shrink-0">
+            <span class="text-secondary d-none d-sm-inline">{{ $b->uploaded_at->format('d/m/Y') }}</span>
+            <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="collapse"
+                    data-bs-target="#pratinjau-bukti-{{ $b->getKey() }}" aria-expanded="false"
+                    aria-controls="pratinjau-bukti-{{ $b->getKey() }}">
+                <i class="bi bi-eye me-1"></i><span class="d-none d-sm-inline">Pratinjau</span>
             </button>
             @if ($bolehHapus ?? false)
                 <form method="POST" action="{{ route('bukti.destroy', $b) }}"
@@ -30,15 +28,13 @@
         </div>
     </div>
 
-    <template x-if="pratinjau">
-        <div class="mt-3">
-            @if ($b->isGambar())
-                <img src="{{ route('bukti.show', $b) }}" alt="Pratinjau {{ $b->nama_file }}"
-                     class="max-h-96 rounded-lg border border-slate-200">
-            @else
-                <iframe src="{{ route('bukti.show', $b) }}" title="Pratinjau {{ $b->nama_file }}"
-                        class="h-96 w-full rounded-lg border border-slate-200"></iframe>
-            @endif
-        </div>
-    </template>
+    <div class="collapse mt-3" id="pratinjau-bukti-{{ $b->getKey() }}">
+        @if ($b->isGambar())
+            <img src="{{ route('bukti.show', $b) }}" alt="Pratinjau {{ $b->nama_file }}"
+                 class="rounded border" style="max-height: 24rem;">
+        @else
+            <iframe src="{{ route('bukti.show', $b) }}" title="Pratinjau {{ $b->nama_file }}"
+                    class="w-100 rounded border" style="height: 24rem;"></iframe>
+        @endif
+    </div>
 </li>

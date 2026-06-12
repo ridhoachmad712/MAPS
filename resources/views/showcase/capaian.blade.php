@@ -19,90 +19,99 @@
 @endphp
 
 @section('konten')
-    <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <div class="container-xl py-4">
 
-        <div class="mb-6 flex flex-wrap items-end justify-between gap-3">
-            <div>
-                <h1 class="text-2xl font-extrabold tracking-tight text-navy-700">Jelajah Capaian</h1>
-                <p class="mt-1 text-sm text-slate-500">
-                    Seluruh capaian terverifikasi yang disetujui tampil publik — saring sesuai kebutuhan.
-                </p>
+        <div class="page-header mb-4">
+            <div class="row align-items-end g-2">
+                <div class="col">
+                    <h1 class="page-title">Jelajah Capaian</h1>
+                    <p class="text-secondary mb-0">
+                        Seluruh capaian terverifikasi yang disetujui tampil publik — saring sesuai kebutuhan.
+                    </p>
+                </div>
+                <div class="col-auto">
+                    <p class="text-secondary small mb-0">
+                        <i class="bi bi-patch-check me-1"></i>
+                        Seluruh angka dihitung otomatis dari entri yang telah diverifikasi prodi.
+                    </p>
+                </div>
             </div>
-            <p class="text-xs text-slate-400">
-                <i class="bi bi-patch-check"></i>
-                Seluruh angka dihitung otomatis dari entri yang telah diverifikasi prodi.
-            </p>
         </div>
 
-        <div class="grid gap-5 lg:grid-cols-12">
+        <div class="row g-3">
 
             {{-- Panel filter kiri (sticky, dapat dilipat di layar sempit) --}}
-            <aside class="lg:col-span-3">
-                <form method="GET" id="formFilter" class="card lg:sticky lg:top-20"
-                      x-data="{ buka: true }"
-                      x-init="buka = window.matchMedia('(min-width: 1024px)').matches">
-                    <button type="button" class="card-header w-full justify-between text-left" @click="buka = !buka">
-                        <span><i class="bi bi-funnel"></i> Filter</span>
-                        <span class="flex items-center gap-3">
+            <aside class="col-12 col-lg-3">
+                <form method="GET" id="formFilter" class="card sticky-lg-top" style="top: 4.5rem;">
+                    <button type="button" class="card-header d-flex justify-content-between align-items-center w-100 border-0 bg-transparent d-lg-none"
+                            data-bs-toggle="collapse" data-bs-target="#panelFilter" aria-expanded="false" aria-controls="panelFilter">
+                        <span class="card-title mb-0"><i class="bi bi-funnel me-1"></i>Filter</span>
+                        <span class="d-flex align-items-center gap-2">
                             @if ($filterAktif->isNotEmpty())
-                                <span class="badge badge-primary">{{ $filterAktif->count() }}</span>
+                                <span class="badge bg-blue-lt">{{ $filterAktif->count() }}</span>
                             @endif
-                            <i class="bi bi-chevron-down text-sm text-slate-400 transition-transform lg:hidden" :class="buka ? 'rotate-180' : ''"></i>
+                            <i class="bi bi-chevron-down text-secondary"></i>
                         </span>
                     </button>
+                    <div class="card-header d-none d-lg-flex">
+                        <h3 class="card-title"><i class="bi bi-funnel me-1"></i>Filter</h3>
+                        @if ($filterAktif->isNotEmpty())
+                            <span class="badge bg-blue-lt ms-auto">{{ $filterAktif->count() }}</span>
+                        @endif
+                    </div>
 
-                    <div x-show="buka" x-cloak>
-                        <div class="space-y-5 px-5 py-4">
+                    <div class="collapse d-lg-block" id="panelFilter">
+                        <div class="card-body d-grid gap-3">
                             <div>
-                                <label class="form-label text-xs uppercase tracking-wider text-slate-400">Pencarian</label>
-                                <div class="flex gap-1.5">
-                                    <input type="text" name="q" class="form-control form-control-sm" value="{{ request('q') }}"
+                                <label class="form-label">Pencarian</label>
+                                <div class="input-group">
+                                    <input type="text" name="q" class="form-control" value="{{ request('q') }}"
                                            placeholder="Judul, penyelenggara, nama...">
-                                    <button class="btn btn-sm btn-maps" aria-label="Cari"><i class="bi bi-search"></i></button>
+                                    <button class="btn btn-primary btn-icon" aria-label="Cari"><i class="bi bi-search"></i></button>
                                 </div>
                             </div>
 
                             <div>
-                                <span class="form-label text-xs uppercase tracking-wider text-slate-400">Kategori</span>
-                                <div class="space-y-1">
-                                    <label class="flex cursor-pointer items-center justify-between rounded-lg px-2 py-1.5 text-sm hover:bg-slate-50">
-                                        <span class="flex items-center gap-2">
+                                <div class="form-label">Kategori</div>
+                                <div class="d-grid gap-1">
+                                    <label class="form-check mb-0 d-flex justify-content-between">
+                                        <span>
                                             <input type="radio" name="kategori" value="" class="form-check-input" @checked(!request()->filled('kategori'))>
-                                            Semua kategori
+                                            <span class="form-check-label d-inline">Semua kategori</span>
                                         </span>
                                     </label>
                                     @foreach ($kategori as $k)
-                                        <label class="flex cursor-pointer items-center justify-between rounded-lg px-2 py-1.5 text-sm hover:bg-slate-50">
-                                            <span class="flex items-center gap-2">
+                                        <label class="form-check mb-0 d-flex justify-content-between">
+                                            <span>
                                                 <input type="radio" name="kategori" value="{{ $k->kategori_id }}" class="form-check-input"
                                                        @checked(request('kategori') == $k->kategori_id)>
-                                                {{ $k->nama_kategori }}
+                                                <span class="form-check-label d-inline">{{ $k->nama_kategori }}</span>
                                             </span>
-                                            <span class="badge badge-soft">{{ $k->total_publik }}</span>
+                                            <span class="badge bg-secondary-lt">{{ $k->total_publik }}</span>
                                         </label>
                                     @endforeach
                                 </div>
                             </div>
 
                             <div>
-                                <span class="form-label text-xs uppercase tracking-wider text-slate-400">Level</span>
-                                <div class="space-y-1">
-                                    <label class="flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-sm hover:bg-slate-50">
+                                <div class="form-label">Level</div>
+                                <div class="d-grid gap-1">
+                                    <label class="form-check mb-0">
                                         <input type="radio" name="level" value="" class="form-check-input" @checked(!request()->filled('level'))>
-                                        Semua level
+                                        <span class="form-check-label">Semua level</span>
                                     </label>
                                     @foreach (\App\Models\Portofolio::LEVEL_LABEL as $nilai => $label)
-                                        <label class="flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-sm hover:bg-slate-50">
+                                        <label class="form-check mb-0">
                                             <input type="radio" name="level" value="{{ $nilai }}" class="form-check-input" @checked(request('level') === $nilai)>
-                                            {{ $label }}
+                                            <span class="form-check-label">{{ $label }}</span>
                                         </label>
                                     @endforeach
                                 </div>
                             </div>
 
-                            <div class="grid grid-cols-2 gap-3">
-                                <div>
-                                    <label class="form-label text-xs uppercase tracking-wider text-slate-400">Tahun</label>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <label class="form-label">Tahun</label>
                                     <select name="tahun" class="form-select form-select-sm">
                                         <option value="">Semua</option>
                                         @foreach ($daftarTahun as $t)
@@ -110,8 +119,8 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div>
-                                    <label class="form-label text-xs uppercase tracking-wider text-slate-400">Angkatan</label>
+                                <div class="col-6">
+                                    <label class="form-label">Angkatan</label>
                                     <select name="angkatan" class="form-select form-select-sm">
                                         <option value="">Semua</option>
                                         @foreach ($daftarAngkatan as $a)
@@ -126,31 +135,31 @@
             </aside>
 
             {{-- Konten utama --}}
-            <div class="space-y-5 lg:col-span-9">
+            <div class="col-12 col-lg-9 d-grid gap-3 align-content-start">
 
                 {{-- Chip filter aktif --}}
                 @if ($filterAktif->isNotEmpty())
-                    <div class="flex flex-wrap items-center gap-2">
-                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Filter aktif:</span>
+                    <div class="d-flex flex-wrap align-items-center gap-2">
+                        <span class="text-secondary text-uppercase small fw-semibold">Filter aktif:</span>
                         @foreach ($filterAktif as $kunci => $label)
                             <a href="{{ route('showcase.capaian', collect(request()->except([$kunci, 'page']))->all()) }}"
-                               class="badge badge-primary hover:bg-navy-100" title="Lepas filter ini">
-                                {{ $label }} <i class="bi bi-x"></i>
+                               class="badge bg-blue-lt" title="Lepas filter ini">
+                                {{ $label }} <i class="bi bi-x ms-1"></i>
                             </a>
                         @endforeach
-                        <a href="{{ route('showcase.capaian') }}" class="text-xs font-semibold text-slate-500 hover:text-navy-700 hover:underline">
+                        <a href="{{ route('showcase.capaian') }}" class="small fw-semibold link-secondary">
                             Hapus semua
                         </a>
                     </div>
                 @endif
 
                 <div class="card">
-                    <div class="card-header justify-between text-sm">
-                        <span><i class="bi bi-list-check"></i>Daftar capaian terverifikasi</span>
-                        <span class="text-xs font-normal text-slate-400">{{ $entri->total() }} entri</span>
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="bi bi-list-check me-1"></i>Daftar capaian terverifikasi</h3>
+                        <span class="text-secondary small ms-auto">{{ $entri->total() }} entri</span>
                     </div>
-                    <div class="overflow-x-auto">
-                        <table class="table-maps">
+                    <div class="table-responsive">
+                        <table class="table table-vcenter table-hover card-table">
                             <thead>
                                 <tr>
                                     <th>Capaian</th>
@@ -158,50 +167,50 @@
                                     <th>Kategori</th>
                                     <th>
                                         <a href="{{ request()->fullUrlWithQuery(['urut' => $urut === 'level_turun' ? 'level_naik' : 'level_turun', 'page' => null]) }}"
-                                           class="inline-flex items-center gap-1 hover:text-navy-700">
+                                           class="d-inline-flex align-items-center gap-1 text-reset">
                                             Level
                                             @if ($urut === 'level_turun') <i class="bi bi-arrow-down"></i>
                                             @elseif ($urut === 'level_naik') <i class="bi bi-arrow-up"></i>
-                                            @else <i class="bi bi-arrow-down-up opacity-40"></i> @endif
+                                            @else <i class="bi bi-arrow-down-up opacity-50"></i> @endif
                                         </a>
                                     </th>
-                                    <th class="text-right">
+                                    <th class="text-end">
                                         <a href="{{ request()->fullUrlWithQuery(['urut' => $urut === 'tahun_turun' ? 'tahun_naik' : 'tahun_turun', 'page' => null]) }}"
-                                           class="inline-flex items-center gap-1 hover:text-navy-700">
+                                           class="d-inline-flex align-items-center gap-1 text-reset">
                                             Tahun
                                             @if ($urut === 'tahun_turun') <i class="bi bi-arrow-down"></i>
                                             @elseif ($urut === 'tahun_naik') <i class="bi bi-arrow-up"></i>
-                                            @else <i class="bi bi-arrow-down-up opacity-40"></i> @endif
+                                            @else <i class="bi bi-arrow-down-up opacity-50"></i> @endif
                                         </a>
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse ($entri as $p)
-                                    <tr class="cursor-pointer" onclick="window.location='{{ route('showcase.mahasiswa', $p->mahasiswa) }}'">
+                                    <tr role="link" style="cursor: pointer;" onclick="window.location='{{ route('showcase.mahasiswa', $p->mahasiswa) }}'">
                                         <td>
-                                            <div class="font-semibold text-navy-700">{{ $p->judul }}</div>
-                                            <div class="text-xs text-slate-500">
+                                            <div class="fw-semibold">{{ $p->judul }}</div>
+                                            <div class="text-secondary small">
                                                 {{ $p->penyelenggara ?: 'Penyelenggara tidak dicantumkan' }}
                                                 @if ($p->peran_capaian) · {{ $p->peran_capaian }} @endif
                                             </div>
                                         </td>
                                         <td>
-                                            <span class="font-medium text-navy-700">{{ $p->mahasiswa->nama_lengkap }}</span>
-                                            <div class="text-xs text-slate-500">{{ $p->mahasiswa->nimSamar() }} · {{ $p->mahasiswa->angkatan }}</div>
+                                            <span class="fw-medium">{{ $p->mahasiswa->nama_lengkap }}</span>
+                                            <div class="text-secondary small">{{ $p->mahasiswa->nimSamar() }} · {{ $p->mahasiswa->angkatan }}</div>
                                         </td>
-                                        <td><span class="badge badge-soft">{{ $p->kategori->kode }}</span></td>
-                                        <td><span class="badge badge-level-{{ $p->level }}">{{ $p->levelLabel() }}</span></td>
-                                        <td class="text-right font-medium">{{ $p->tahun_pencapaian }}</td>
+                                        <td><span class="badge bg-secondary-lt">{{ $p->kategori->kode }}</span></td>
+                                        <td><span class="badge bg-{{ $p->levelBadge() }}-lt">{{ $p->levelLabel() }}</span></td>
+                                        <td class="text-end fw-medium">{{ $p->tahun_pencapaian }}</td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="py-12 text-center text-slate-400">
-                                            <i class="bi bi-search mb-2 block text-3xl"></i>
+                                        <td colspan="5" class="text-center text-secondary py-5">
+                                            <i class="bi bi-search d-block fs-1 mb-2"></i>
                                             Tidak ada capaian yang cocok dengan filter Anda.
                                             @if ($filterAktif->isNotEmpty())
                                                 <div class="mt-3">
-                                                    <a href="{{ route('showcase.capaian') }}" class="btn btn-sm btn-outline">Hapus semua filter</a>
+                                                    <a href="{{ route('showcase.capaian') }}" class="btn btn-sm btn-outline-secondary">Hapus semua filter</a>
                                                 </div>
                                             @endif
                                         </td>
@@ -211,7 +220,7 @@
                         </table>
                     </div>
                     @if ($entri->hasPages())
-                        <div class="border-t border-slate-100 px-5 py-3">{{ $entri->links() }}</div>
+                        <div class="card-footer">{{ $entri->links() }}</div>
                     @endif
                 </div>
             </div>

@@ -28,48 +28,49 @@
     @endphp
 
     {{-- Hero: gradasi warna tema, atau foto + overlay bila diatur dari admin --}}
-    <section class="{{ $heroFoto ? 'relative bg-cover bg-center text-white' : 'hero-gesit' }}"
-             @if ($heroFoto) style="background-image: url('{{ asset('storage/'.$heroFoto) }}')" @endif>
+    <section class="{{ $heroFoto ? 'position-relative text-white' : 'hero-maps' }}"
+             @if ($heroFoto) style="background-image: url('{{ asset('storage/'.$heroFoto) }}'); background-size: cover; background-position: center;" @endif>
         @if ($heroFoto)
-            <div class="absolute inset-0" style="background-color: rgb({{ $hr }} {{ $hg }} {{ $hb }} / {{ $heroOverlay }})" aria-hidden="true"></div>
+            <div class="position-absolute top-0 start-0 w-100 h-100" style="background-color: rgb({{ $hr }} {{ $hg }} {{ $hb }} / {{ $heroOverlay }})" aria-hidden="true"></div>
         @endif
-        <div class="relative mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
-            <div class="mx-auto max-w-3xl text-center">
-                <p class="text-sm font-semibold uppercase tracking-widest text-navy-100">
-                    {{ \App\Models\Setting::get('hero_eyebrow') }}
-                </p>
-                <h1 class="mt-3 text-3xl font-bold leading-tight sm:text-5xl">
-                    {{ \App\Models\Setting::get('hero_judul') }}
-                </h1>
-                <p class="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-navy-100 sm:text-lg">
-                    {{ \App\Models\Setting::get('hero_deskripsi') }}
-                </p>
+        <div class="container-xl position-relative py-5 py-md-6">
+            <div class="row justify-content-center text-center py-4">
+                <div class="col-12 col-lg-8">
+                    <p class="text-uppercase fw-semibold tracking-wide mb-2 opacity-75">
+                        {{ \App\Models\Setting::get('hero_eyebrow') }}
+                    </p>
+                    <h1 class="display-5 fw-bold">
+                        {{ \App\Models\Setting::get('hero_judul') }}
+                    </h1>
+                    <p class="fs-3 opacity-75 mx-auto mt-3" style="max-width: 40rem;">
+                        {{ \App\Models\Setting::get('hero_deskripsi') }}
+                    </p>
 
-                <form action="{{ route('showcase.capaian') }}" method="GET" class="mx-auto mt-8 flex max-w-xl rounded-xl bg-white shadow-lg">
-                    <input type="search" name="q"
-                           placeholder="{{ \App\Models\Setting::get('hero_placeholder') }}"
-                           class="w-full rounded-l-xl border-0 bg-transparent px-5 py-3.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-0">
-                    <button type="submit" class="rounded-r-xl bg-navy-800 px-6 text-sm font-semibold text-white transition hover:bg-navy-900">
-                        Cari
-                    </button>
-                </form>
+                    <form action="{{ route('showcase.capaian') }}" method="GET" class="mx-auto mt-4" style="max-width: 36rem;" data-bs-theme="light">
+                        <div class="input-group input-group-lg shadow">
+                            <input type="search" name="q" class="form-control border-0"
+                                   placeholder="{{ \App\Models\Setting::get('hero_placeholder') }}">
+                            <button type="submit" class="btn btn-primary px-4">Cari</button>
+                        </div>
+                    </form>
 
-                <div class="mt-10 flex flex-wrap justify-center gap-8">
-                    <div>
-                        <div class="text-3xl font-bold">{{ $statistik['total_capaian'] }}</div>
-                        <div class="mt-1 text-sm text-navy-100">Capaian terverifikasi</div>
-                    </div>
-                    <div>
-                        <div class="text-3xl font-bold">{{ $statistik['mahasiswa_berprestasi'] }}</div>
-                        <div class="mt-1 text-sm text-navy-100">Mahasiswa berprestasi</div>
-                    </div>
-                    <div>
-                        <div class="text-3xl font-bold">{{ $statistik['nasional'] }}</div>
-                        <div class="mt-1 text-sm text-navy-100">Tingkat nasional</div>
-                    </div>
-                    <div>
-                        <div class="text-3xl font-bold">{{ $statistik['internasional'] }}</div>
-                        <div class="mt-1 text-sm text-navy-100">Tingkat internasional</div>
+                    <div class="d-flex flex-wrap justify-content-center gap-5 mt-5">
+                        <div>
+                            <div class="h1 mb-0">{{ $statistik['total_capaian'] }}</div>
+                            <div class="opacity-75">Capaian terverifikasi</div>
+                        </div>
+                        <div>
+                            <div class="h1 mb-0">{{ $statistik['mahasiswa_berprestasi'] }}</div>
+                            <div class="opacity-75">Mahasiswa berprestasi</div>
+                        </div>
+                        <div>
+                            <div class="h1 mb-0">{{ $statistik['nasional'] }}</div>
+                            <div class="opacity-75">Tingkat nasional</div>
+                        </div>
+                        <div>
+                            <div class="h1 mb-0">{{ $statistik['internasional'] }}</div>
+                            <div class="opacity-75">Tingkat internasional</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -78,44 +79,46 @@
 
     {{-- Sorotan: capaian internasional & nasional terbaru --}}
     @if ($sorotan->isNotEmpty() && \App\Models\Setting::get('sorotan_tampil') === '1')
-        <section class="mx-auto max-w-7xl px-4 pt-12 sm:px-6 lg:px-8">
-            <div class="flex flex-wrap items-end justify-between gap-2">
+        <section class="container-xl pt-5">
+            <div class="d-flex flex-wrap align-items-end justify-content-between gap-2 mb-3">
                 <div>
-                    <h2 class="text-xl font-bold text-gray-900 sm:text-2xl">{{ \App\Models\Setting::get('sorotan_judul') }}</h2>
-                    <p class="mt-1 text-sm text-gray-600">{{ \App\Models\Setting::get('sorotan_sub') }}</p>
+                    <h2 class="h1 mb-1">{{ \App\Models\Setting::get('sorotan_judul') }}</h2>
+                    <p class="text-secondary mb-0">{{ \App\Models\Setting::get('sorotan_sub') }}</p>
                 </div>
-                <a href="{{ route('showcase.capaian') }}" class="text-sm font-semibold text-navy-600 hover:underline">
+                <a href="{{ route('showcase.capaian') }}" class="fw-semibold">
                     Lihat semua capaian <i class="bi bi-arrow-right"></i>
                 </a>
             </div>
-            <div class="mt-5 grid gap-4 md:grid-cols-3">
+            <div class="row row-cards">
                 @foreach ($sorotan as $p)
-                    <a href="{{ route('showcase.mahasiswa', $p->mahasiswa) }}" class="card card-hover flex flex-col p-5">
-                        <div class="mb-3 flex flex-wrap items-center gap-1.5">
-                            <span class="badge badge-level-{{ $p->level }}">{{ $p->levelLabel() }}</span>
-                            <span class="badge badge-soft">{{ $p->kategori->nama_kategori }}</span>
-                        </div>
-                        <h3 class="font-bold leading-snug text-navy-600">{{ $p->judul }}</h3>
-                        <div class="mt-1.5 text-xs text-gray-500">
-                            {{ $p->penyelenggara ?: 'Penyelenggara tidak dicantumkan' }} · {{ $p->tahun_pencapaian }}
-                        </div>
-                        @if ($p->peran_capaian)
-                            <div class="mt-1.5 text-sm text-gray-700"><i class="bi bi-award text-gray-400"></i> {{ $p->peran_capaian }}</div>
-                        @endif
-                        <div class="mt-auto flex items-center gap-2.5 border-t border-gray-100 pt-3.5">
-                            @if ($p->mahasiswa->foto)
-                                <img src="{{ asset('storage/'.$p->mahasiswa->foto) }}" alt="" class="h-9 w-9 rounded-full object-cover">
-                            @else
-                                <span class="flex h-9 w-9 items-center justify-center rounded-full bg-navy-50 text-sm font-bold text-navy-600">
-                                    {{ strtoupper(substr($p->mahasiswa->nama_lengkap, 0, 1)) }}
-                                </span>
-                            @endif
-                            <span class="min-w-0">
-                                <span class="block truncate text-sm font-semibold text-gray-900">{{ $p->mahasiswa->nama_lengkap }}</span>
-                                <span class="block text-xs text-gray-500">Angkatan {{ $p->mahasiswa->angkatan }}</span>
-                            </span>
-                        </div>
-                    </a>
+                    <div class="col-12 col-md-4 d-flex">
+                        <a href="{{ route('showcase.mahasiswa', $p->mahasiswa) }}" class="card card-link w-100">
+                            <div class="card-body d-flex flex-column">
+                                <div class="d-flex flex-wrap gap-1 mb-2">
+                                    <span class="badge bg-{{ $p->levelBadge() }}-lt">{{ $p->levelLabel() }}</span>
+                                    <span class="badge bg-secondary-lt">{{ $p->kategori->nama_kategori }}</span>
+                                </div>
+                                <h3 class="card-title mb-1">{{ $p->judul }}</h3>
+                                <div class="text-secondary small">
+                                    {{ $p->penyelenggara ?: 'Penyelenggara tidak dicantumkan' }} · {{ $p->tahun_pencapaian }}
+                                </div>
+                                @if ($p->peran_capaian)
+                                    <div class="mt-1"><i class="bi bi-award text-secondary me-1"></i>{{ $p->peran_capaian }}</div>
+                                @endif
+                                <div class="d-flex align-items-center gap-2 border-top pt-3 mt-auto">
+                                    @if ($p->mahasiswa->foto)
+                                        <span class="avatar avatar-sm rounded-circle" style="background-image: url('{{ asset('storage/'.$p->mahasiswa->foto) }}')"></span>
+                                    @else
+                                        <span class="avatar avatar-sm rounded-circle">{{ strtoupper(substr($p->mahasiswa->nama_lengkap, 0, 1)) }}</span>
+                                    @endif
+                                    <span class="min-width-0">
+                                        <span class="d-block text-truncate fw-semibold text-body">{{ $p->mahasiswa->nama_lengkap }}</span>
+                                        <span class="d-block text-secondary small">Angkatan {{ $p->mahasiswa->angkatan }}</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
                 @endforeach
             </div>
         </section>
@@ -123,31 +126,32 @@
 
     {{-- Galeri mahasiswa berprestasi --}}
     @if ($mahasiswaTop->isNotEmpty() && \App\Models\Setting::get('galeri_tampil') === '1')
-        <section class="mx-auto max-w-7xl px-4 pt-12 sm:px-6 lg:px-8">
-            <div class="flex flex-wrap items-end justify-between gap-2">
+        <section class="container-xl pt-5">
+            <div class="d-flex flex-wrap align-items-end justify-content-between gap-2 mb-3">
                 <div>
-                    <h2 class="text-xl font-bold text-gray-900 sm:text-2xl">{{ \App\Models\Setting::get('galeri_judul') }}</h2>
-                    <p class="mt-1 text-sm text-gray-600">{{ \App\Models\Setting::get('galeri_sub') }}</p>
+                    <h2 class="h1 mb-1">{{ \App\Models\Setting::get('galeri_judul') }}</h2>
+                    <p class="text-secondary mb-0">{{ \App\Models\Setting::get('galeri_sub') }}</p>
                 </div>
-                <a href="{{ route('showcase.mahasiswa.indeks') }}" class="text-sm font-semibold text-navy-600 hover:underline">
+                <a href="{{ route('showcase.mahasiswa.indeks') }}" class="fw-semibold">
                     Lihat semua mahasiswa <i class="bi bi-arrow-right"></i>
                 </a>
             </div>
-            <div class="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+            <div class="row row-cards row-cols-2 row-cols-sm-3 row-cols-lg-6">
                 @foreach ($mahasiswaTop as $m)
-                    <a href="{{ route('showcase.mahasiswa', $m) }}" class="card card-hover p-5 text-center">
-                        @if ($m->foto)
-                            <img src="{{ asset('storage/'.$m->foto) }}" alt="Foto {{ $m->nama_lengkap }}"
-                                 class="mx-auto h-16 w-16 rounded-full object-cover">
-                        @else
-                            <span class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-navy-50 text-xl font-bold text-navy-600">
-                                {{ strtoupper(substr($m->nama_lengkap, 0, 1)) }}
-                            </span>
-                        @endif
-                        <div class="mt-3 truncate text-sm font-semibold text-gray-900" title="{{ $m->nama_lengkap }}">{{ $m->nama_lengkap }}</div>
-                        <div class="text-xs text-gray-500">Angkatan {{ $m->angkatan }}</div>
-                        <span class="badge badge-primary mt-2.5">{{ $m->total_publik }} capaian</span>
-                    </a>
+                    <div class="col d-flex">
+                        <a href="{{ route('showcase.mahasiswa', $m) }}" class="card card-link w-100 text-center">
+                            <div class="card-body">
+                                @if ($m->foto)
+                                    <span class="avatar avatar-lg rounded-circle mx-auto" style="background-image: url('{{ asset('storage/'.$m->foto) }}')"></span>
+                                @else
+                                    <span class="avatar avatar-lg rounded-circle mx-auto">{{ strtoupper(substr($m->nama_lengkap, 0, 1)) }}</span>
+                                @endif
+                                <div class="fw-semibold text-body text-truncate mt-3" title="{{ $m->nama_lengkap }}">{{ $m->nama_lengkap }}</div>
+                                <div class="text-secondary small">Angkatan {{ $m->angkatan }}</div>
+                                <span class="badge bg-blue-lt mt-2">{{ $m->total_publik }} capaian</span>
+                            </div>
+                        </a>
+                    </div>
                 @endforeach
             </div>
         </section>
@@ -155,24 +159,28 @@
 
     {{-- Grafik ringkas --}}
     @if (\App\Models\Setting::get('grafik_tampil') === '1')
-    <section class="mx-auto max-w-7xl px-4 pt-12 sm:px-6 lg:px-8">
-        <div class="flex flex-wrap items-end justify-between gap-2">
+    <section class="container-xl pt-5">
+        <div class="d-flex flex-wrap align-items-end justify-content-between gap-2 mb-3">
             <div>
-                <h2 class="text-xl font-bold text-gray-900 sm:text-2xl">{{ \App\Models\Setting::get('grafik_judul') }}</h2>
-                <p class="mt-1 text-sm text-gray-600">{{ \App\Models\Setting::get('grafik_sub') }}</p>
+                <h2 class="h1 mb-1">{{ \App\Models\Setting::get('grafik_judul') }}</h2>
+                <p class="text-secondary mb-0">{{ \App\Models\Setting::get('grafik_sub') }}</p>
             </div>
-            <a href="{{ route('showcase.statistik') }}" class="text-sm font-semibold text-navy-600 hover:underline">
+            <a href="{{ route('showcase.statistik') }}" class="fw-semibold">
                 Statistik lengkap <i class="bi bi-arrow-right"></i>
             </a>
         </div>
-        <div class="mt-5 grid gap-4 md:grid-cols-2">
-            <div class="card">
-                <div class="card-header text-sm"><i class="bi bi-graph-up-arrow"></i>Tren capaian per tahun</div>
-                <div class="relative h-56 px-4 py-3"><canvas id="grafikTren"></canvas></div>
+        <div class="row row-cards">
+            <div class="col-12 col-md-6">
+                <div class="card">
+                    <div class="card-header"><h3 class="card-title"><i class="bi bi-graph-up-arrow me-2"></i>Tren capaian per tahun</h3></div>
+                    <div class="card-body position-relative" style="height: 14rem;"><canvas id="grafikTren"></canvas></div>
+                </div>
             </div>
-            <div class="card">
-                <div class="card-header text-sm"><i class="bi bi-people"></i>Capaian per angkatan</div>
-                <div class="relative h-56 px-4 py-3"><canvas id="grafikAngkatan"></canvas></div>
+            <div class="col-12 col-md-6">
+                <div class="card">
+                    <div class="card-header"><h3 class="card-title"><i class="bi bi-people me-2"></i>Capaian per angkatan</h3></div>
+                    <div class="card-body position-relative" style="height: 14rem;"><canvas id="grafikAngkatan"></canvas></div>
+                </div>
             </div>
         </div>
     </section>
@@ -180,30 +188,37 @@
 
     {{-- Ajakan menjelajah data --}}
     @if (\App\Models\Setting::get('cta_tampil') === '1')
-    <section class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div class="card flex flex-col items-center gap-4 bg-navy-50 p-8 text-center sm:flex-row sm:justify-between sm:text-left">
-            <div>
-                <h2 class="text-lg font-bold text-navy-700">{{ \App\Models\Setting::get('cta_judul') }}</h2>
-                <p class="mt-1 text-sm text-navy-600">{{ \App\Models\Setting::get('cta_deskripsi') }}</p>
+    <section class="container-xl py-5">
+        <div class="card card-active">
+            <div class="card-body d-flex flex-column flex-sm-row align-items-center justify-content-between gap-3 text-center text-sm-start">
+                <div>
+                    <h2 class="h2 mb-1">{{ \App\Models\Setting::get('cta_judul') }}</h2>
+                    <p class="text-secondary mb-0">{{ \App\Models\Setting::get('cta_deskripsi') }}</p>
+                </div>
+                <a href="{{ route('showcase.capaian') }}" class="btn btn-primary flex-shrink-0">
+                    <i class="bi bi-table me-1"></i>{{ \App\Models\Setting::get('cta_tombol') }}
+                </a>
             </div>
-            <a href="{{ route('showcase.capaian') }}" class="btn btn-maps shrink-0">
-                <i class="bi bi-table"></i>{{ \App\Models\Setting::get('cta_tombol') }}
-            </a>
         </div>
     </section>
     @else
-    <div class="pb-12"></div>
+    <div class="pb-5"></div>
     @endif
 @endsection
 
 @push('js')
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 <script>
+    const gayaAkar = getComputedStyle(document.documentElement);
+    const warnaPrimer = gayaAkar.getPropertyValue('--tblr-primary').trim() || '#066fd1';
+    const warnaPrimerMuda = gayaAkar.getPropertyValue('--primer-400').trim() || warnaPrimer;
+    const warnaPrimerRgb = gayaAkar.getPropertyValue('--tblr-primary-rgb').trim() || '6, 111, 209';
+
     Chart.defaults.font.family = getComputedStyle(document.body).fontFamily;
-    Chart.defaults.color = '#64748b';
+    Chart.defaults.color = '#667382';
 
     const tooltipMaps = {
-        backgroundColor: '#172c68',
+        backgroundColor: warnaPrimer,
         padding: 10,
         cornerRadius: 8,
         displayColors: false,
@@ -223,8 +238,8 @@
             labels: @json($trenTahun->keys()),
             datasets: [{
                 data: @json($trenTahun->values()),
-                borderColor: '#1e3a8a',
-                backgroundColor: 'rgba(30,58,138,.1)',
+                borderColor: warnaPrimer,
+                backgroundColor: `rgba(${warnaPrimerRgb}, .1)`,
                 fill: true,
                 tension: .3,
                 pointRadius: 3,
@@ -239,7 +254,7 @@
             labels: @json($perAngkatan->keys()->map(fn ($a) => 'Angkatan '.$a)),
             datasets: [{
                 data: @json($perAngkatan->values()),
-                backgroundColor: '#5577c0',
+                backgroundColor: warnaPrimerMuda,
                 borderRadius: 5,
             }],
         },

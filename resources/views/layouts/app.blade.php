@@ -5,89 +5,117 @@
     <meta name="robots" content="noindex">
 @endsection
 
+@php
+    $navbarTerang = \App\Support\PaletWarna::terang(\App\Models\Setting::get('warna_navbar'));
+    $dataMasterAktif = request()->routeIs('admin.mahasiswa.*', 'admin.kategori.*', 'admin.pengguna.*', 'admin.pengaturan.*');
+@endphp
+
 @section('navbar')
-    <nav class="navbar-maps" x-data="{ menu: false }">
-        <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-3">
-            <a class="flex items-center gap-3" href="{{ route('dashboard') }}">
+    <header class="navbar navbar-expand-lg navbar-maps sticky-top d-print-none" data-bs-theme="{{ $navbarTerang ? 'light' : 'dark' }}">
+        <div class="container-xl">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu-aplikasi"
+                    aria-controls="menu-aplikasi" aria-expanded="false" aria-label="Buka menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <a class="navbar-brand d-flex align-items-center gap-2 pe-lg-3" href="{{ route('dashboard') }}">
                 <img src="{{ \App\Models\Setting::get('logo') ? asset('storage/'.\App\Models\Setting::get('logo')) : asset('favicon.svg') }}"
-                     alt="Logo {{ \App\Models\Setting::get('nama_aplikasi') }}" class="h-10 w-10 rounded-lg object-contain">
-                <span class="leading-tight">
-                    <span class="navbar-judul block text-sm font-bold sm:text-base">{{ \App\Models\Setting::get('nama_aplikasi') }}</span>
-                    <span class="navbar-sub block text-xs">{{ \App\Models\Setting::get('nama_pemilik') }}</span>
+                     alt="Logo {{ \App\Models\Setting::get('nama_aplikasi') }}" width="40" height="40" class="rounded">
+                <span class="lh-sm">
+                    <span class="d-block fw-bold">{{ \App\Models\Setting::get('nama_aplikasi') }}</span>
+                    <span class="d-block fs-5 text-secondary">{{ \App\Models\Setting::get('nama_pemilik') }}</span>
                 </span>
             </a>
 
-            <button class="navbar-toggle rounded-lg px-3 py-1.5 lg:hidden" @click="menu = !menu" aria-label="Buka menu">
-                <i class="bi" :class="menu ? 'bi-x-lg' : 'bi-list'"></i>
-            </button>
-
-            <div class="w-full lg:flex lg:w-auto lg:grow lg:items-center lg:justify-between"
-                 :class="menu ? 'block' : 'hidden lg:flex'">
-                <ul class="flex flex-col gap-1 py-2 lg:flex-row lg:items-center lg:py-0">
-                    <li>
-                        <a class="nav-link-maps {{ request()->routeIs('dashboard') ? 'aktif' : '' }}" href="{{ route('dashboard') }}">
-                            <i class="bi bi-speedometer2"></i>Dashboard
+            <div class="collapse navbar-collapse" id="menu-aplikasi">
+                <ul class="navbar-nav">
+                    <li class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('dashboard') }}">
+                            <span class="nav-link-icon"><i class="bi bi-speedometer2"></i></span>
+                            <span class="nav-link-title">Dashboard</span>
                         </a>
                     </li>
 
                     @if (auth()->user()->isMahasiswa())
-                        <li>
-                            <a class="nav-link-maps {{ request()->routeIs('portofolio.*') ? 'aktif' : '' }}" href="{{ route('portofolio.index') }}">
-                                <i class="bi bi-journal-album"></i>Portofolio Saya
+                        <li class="nav-item {{ request()->routeIs('portofolio.*') ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ route('portofolio.index') }}">
+                                <span class="nav-link-icon"><i class="bi bi-journal-album"></i></span>
+                                <span class="nav-link-title">Portofolio Saya</span>
                             </a>
                         </li>
-                        <li>
-                            <a class="nav-link-maps {{ request()->routeIs('profil.*') ? 'aktif' : '' }}" href="{{ route('profil.edit') }}">
-                                <i class="bi bi-person-circle"></i>Profil
+                        <li class="nav-item {{ request()->routeIs('profil.*') ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ route('profil.edit') }}">
+                                <span class="nav-link-icon"><i class="bi bi-person-circle"></i></span>
+                                <span class="nav-link-title">Profil</span>
                             </a>
                         </li>
                     @else
-                        <li>
-                            <a class="nav-link-maps {{ request()->routeIs('admin.verifikasi.*') ? 'aktif' : '' }}" href="{{ route('admin.verifikasi.index') }}">
-                                <i class="bi bi-patch-check"></i>Verifikasi
+                        <li class="nav-item {{ request()->routeIs('admin.verifikasi.*') ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ route('admin.verifikasi.index') }}">
+                                <span class="nav-link-icon"><i class="bi bi-patch-check"></i></span>
+                                <span class="nav-link-title">Verifikasi</span>
                             </a>
                         </li>
-                        <li>
-                            <a class="nav-link-maps {{ request()->routeIs('admin.portofolio.*') ? 'aktif' : '' }}" href="{{ route('admin.portofolio.index') }}">
-                                <i class="bi bi-collection"></i>Semua Portofolio
+                        <li class="nav-item {{ request()->routeIs('admin.portofolio.*') ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ route('admin.portofolio.index') }}">
+                                <span class="nav-link-icon"><i class="bi bi-collection"></i></span>
+                                <span class="nav-link-title">Semua Portofolio</span>
                             </a>
                         </li>
                         @if (auth()->user()->isAdmin())
-                            <li>
-                                <a class="nav-link-maps" href="{{ url('/master') }}">
-                                    <i class="bi bi-gear"></i>Data Master &amp; Laporan
+                            <li class="nav-item dropdown {{ $dataMasterAktif ? 'active' : '' }}">
+                                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" role="button" aria-expanded="false">
+                                    <span class="nav-link-icon"><i class="bi bi-gear"></i></span>
+                                    <span class="nav-link-title">Data Master</span>
                                 </a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item {{ request()->routeIs('admin.mahasiswa.*') ? 'active' : '' }}" href="{{ route('admin.mahasiswa.index') }}">
+                                        <i class="bi bi-people me-2"></i>Mahasiswa
+                                    </a>
+                                    <a class="dropdown-item {{ request()->routeIs('admin.kategori.*') ? 'active' : '' }}" href="{{ route('admin.kategori.index') }}">
+                                        <i class="bi bi-tags me-2"></i>Kategori
+                                    </a>
+                                    <a class="dropdown-item {{ request()->routeIs('admin.pengguna.*') ? 'active' : '' }}" href="{{ route('admin.pengguna.index') }}">
+                                        <i class="bi bi-person-gear me-2"></i>Pengguna
+                                    </a>
+                                    @if (Route::has('admin.pengaturan.edit'))
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item {{ request()->routeIs('admin.pengaturan.*') ? 'active' : '' }}" href="{{ route('admin.pengaturan.edit') }}">
+                                            <i class="bi bi-palette me-2"></i>Pengaturan Tampilan
+                                        </a>
+                                    @endif
+                                </div>
                             </li>
                         @endif
                     @endif
 
-                    <li>
-                        <a class="nav-link-maps" href="{{ route('showcase.index') }}" target="_blank">
-                            <i class="bi bi-globe2"></i>Showcase Publik
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('showcase.index') }}" target="_blank">
+                            <span class="nav-link-icon"><i class="bi bi-globe2"></i></span>
+                            <span class="nav-link-title">Showcase Publik</span>
                         </a>
                     </li>
                 </ul>
 
-                <div class="flex flex-wrap items-center gap-3 border-t border-slate-100 py-3 lg:border-0 lg:py-0">
-                    <span class="text-sm text-slate-500">
-                        <i class="bi bi-person-fill"></i>
-                        {{ auth()->user()->mahasiswa->nama_lengkap ?? auth()->user()->username }}
-                        <span class="badge badge-secondary ml-1 uppercase">{{ auth()->user()->role }}</span>
+                <div class="d-flex align-items-center gap-2 ms-lg-auto my-2 my-lg-0">
+                    <span class="text-secondary">
+                        <i class="bi bi-person-fill me-1"></i>{{ auth()->user()->mahasiswa->nama_lengkap ?? auth()->user()->username }}
+                        <span class="badge bg-secondary-lt text-uppercase ms-1">{{ auth()->user()->role }}</span>
                     </span>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <button class="btn btn-sm btn-outline">
-                            <i class="bi bi-box-arrow-right"></i>Keluar
+                        <button class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-box-arrow-right me-1"></i>Keluar
                         </button>
                     </form>
                 </div>
             </div>
         </div>
-    </nav>
+    </header>
 @endsection
 
 @section('isi')
-    <div class="mx-auto w-full max-w-7xl px-4 py-6">
+    <div class="container-xl py-4">
         @include('partials.flash')
         @yield('konten')
     </div>

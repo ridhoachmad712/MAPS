@@ -10,75 +10,47 @@
 @section('tanpa_footer', '1')
 
 @section('isi')
-    <div class="container-xl d-flex flex-column justify-content-center py-4" style="max-width: 56rem; min-height: 100vh;">
-        <p class="mb-3">
-            <a href="{{ route('showcase.index') }}" class="link-secondary">
-                <i class="bi bi-arrow-left me-1"></i>Kembali ke beranda
+    <div class="container-tight d-flex flex-column justify-content-center py-4" style="min-height: 100vh;">
+        <div class="text-center mb-4">
+            <a href="{{ route('showcase.index') }}" title="Kembali ke beranda">
+                <img src="{{ \App\Models\Setting::get('logo') ? asset('storage/'.\App\Models\Setting::get('logo')) : asset('favicon.svg') }}"
+                     alt="Logo {{ \App\Models\Setting::get('nama_aplikasi') }}" class="rounded" style="height: 56px; width: auto;">
             </a>
-        </p>
+        </div>
 
-        <div class="card overflow-hidden">
-            <div class="row g-0">
+        <div class="card card-md">
+            <div class="card-body">
+                <h1 class="h2 text-center mb-1">Masuk ke {{ \App\Models\Setting::get('nama_aplikasi') }}</h1>
+                <p class="text-secondary text-center mb-4">Mahasiswa masuk memakai NIM sebagai nama pengguna.</p>
 
-                <div class="col-12 col-lg-6 d-flex flex-column justify-content-between p-4 p-lg-5 text-white" style="background: var(--primer-700, var(--tblr-primary));">
-                    <div>
-                        <img src="{{ asset('favicon.svg') }}" alt="Logo MAPS" width="48" height="48" class="rounded border border-light-subtle">
-                        <h1 class="h1 text-white mt-3 mb-1">MAPS</h1>
-                        <p class="text-white opacity-75">Management Student Achievement Portfolio System</p>
+                @include('partials.flash')
 
-                        <ul class="list-unstyled d-grid gap-3 mt-4">
-                            <li class="d-flex gap-3">
-                                <i class="bi bi-archive opacity-75"></i>
-                                <span>Arsip portofolio capaian mahasiswa yang terpusat dan rapi</span>
-                            </li>
-                            <li class="d-flex gap-3">
-                                <i class="bi bi-patch-check opacity-75"></i>
-                                <span>Verifikasi resmi oleh program studi</span>
-                            </li>
-                            <li class="d-flex gap-3">
-                                <i class="bi bi-globe2 opacity-75"></i>
-                                <span>Showcase publik untuk capaian terverifikasi</span>
-                            </li>
-                        </ul>
+                <form method="POST" action="{{ route('login.attempt') }}">
+                    @csrf
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Nama Pengguna / Email</label>
+                        <input type="text" class="form-control @error('username') is-invalid @enderror"
+                               id="username" name="username" value="{{ old('username') }}"
+                               placeholder="NIM untuk mahasiswa" required autofocus>
                     </div>
-                    <p class="small opacity-50 mt-5 mb-0">
-                        Program Studi Manajemen<br>Fakultas Ekonomi dan Bisnis, Universitas Negeri Makassar
-                    </p>
-                </div>
-
-                <div class="col-12 col-lg-6 p-4 p-lg-5">
-                    <h2 class="h2 mb-1">Masuk ke akun Anda</h2>
-                    <p class="text-secondary mb-4">Mahasiswa masuk memakai NIM sebagai nama pengguna.</p>
-
-                    @include('partials.flash')
-
-                    <form method="POST" action="{{ route('login.attempt') }}" class="d-grid gap-3">
-                        @csrf
-                        <div>
-                            <label for="username" class="form-label">Nama Pengguna / Email</label>
-                            <input type="text" class="form-control @error('username') is-invalid @enderror"
-                                   id="username" name="username" value="{{ old('username') }}"
-                                   placeholder="NIM untuk mahasiswa" required autofocus>
-                        </div>
-                        <div>
-                            <label for="password" class="form-label">Kata Sandi</label>
-                            <input type="password" class="form-control @error('password') is-invalid @enderror"
-                                   id="password" name="password" required>
-                        </div>
-                        <label class="form-check mb-0">
-                            <input class="form-check-input" type="checkbox" name="remember">
-                            <span class="form-check-label">Ingat saya</span>
-                        </label>
-                        <button type="submit" class="btn btn-primary w-100">
-                            <i class="bi bi-box-arrow-in-right me-1"></i>Masuk
-                        </button>
-                    </form>
-
-                    <p class="text-center text-secondary small mt-4 mb-0">
-                        Belum punya akun? Hubungi admin prodi untuk pendaftaran.
-                    </p>
-                </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Kata Sandi</label>
+                        <input type="password" class="form-control @error('password') is-invalid @enderror"
+                               id="password" name="password" required>
+                    </div>
+                    <label class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" name="remember">
+                        <span class="form-check-label">Ingat saya</span>
+                    </label>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-box-arrow-in-right me-1"></i>Masuk
+                    </button>
+                </form>
             </div>
         </div>
+
+        <p class="text-center text-secondary mt-3 mb-0">
+            Belum punya akun? Hubungi admin prodi untuk pendaftaran.
+        </p>
     </div>
 @endsection

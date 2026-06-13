@@ -28,6 +28,12 @@
     --tblr-btn-active-bg: var(--primer-600, var(--tblr-primary));
 }
 
+/* Konten menempel rapat ke navbar — hero beranda tampil full-bleed.
+   Jarak vertikal diatur per halaman lewat py-* pada container. */
+.page-body {
+    margin: 0;
+}
+
 /* Hero beranda: gradasi dari warna pengaturan, bisa ditimpa foto latar */
 .hero-maps {
     color: #fff;

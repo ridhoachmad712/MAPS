@@ -14,6 +14,11 @@ class BuktiController extends Controller
      */
     public function show(Request $request, Bukti $bukti)
     {
+        // Bukti tautan tidak punya berkas fisik — buka URL-nya langsung
+        if ($bukti->isTautan()) {
+            abort(404);
+        }
+
         $portofolio = $bukti->portofolio;
         $user = $request->user();
 

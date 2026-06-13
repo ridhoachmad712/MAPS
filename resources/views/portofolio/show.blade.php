@@ -61,10 +61,10 @@
                 </ul>
                 @if ($portofolio->bisaDieditMahasiswa())
                     <div class="card-footer">
-                        <form method="POST" action="{{ route('portofolio.bukti.store', $portofolio) }}" enctype="multipart/form-data" class="d-flex gap-2">
+                        <form method="POST" action="{{ route('portofolio.bukti.store', $portofolio) }}" enctype="multipart/form-data">
                             @csrf
-                            <input type="file" name="bukti[]" class="form-control form-control-sm" accept=".pdf,.jpg,.jpeg,.png" multiple required>
-                            <button class="btn btn-sm btn-primary"><i class="bi bi-upload me-1"></i>Unggah</button>
+                            @include('portofolio._input-bukti', ['barisTautan' => 2, 'sufiks' => 'tambah'])
+                            <button class="btn btn-sm btn-primary mt-3"><i class="bi bi-plus-lg me-1"></i>Tambah Bukti</button>
                         </form>
                     </div>
                 @endif

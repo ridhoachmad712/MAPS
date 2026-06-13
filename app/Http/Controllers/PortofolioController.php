@@ -19,6 +19,8 @@ class PortofolioController extends Controller
         'penyelenggara' => ['nullable', 'string', 'max:255'],
         'peran_capaian' => ['nullable', 'string', 'max:255'],
         'is_publik' => ['nullable', 'boolean'],
+        'tautan' => ['nullable', 'array', 'max:10'],
+        'tautan.*' => ['nullable', 'url', 'max:1000'],
         'bukti' => ['nullable', 'array', 'max:5'],
         'bukti.*' => ['file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
     ];
@@ -28,6 +30,7 @@ class PortofolioController extends Controller
         'judul' => 'judul',
         'tahun_pencapaian' => 'tahun pencapaian',
         'level' => 'level',
+        'tautan.*' => 'tautan bukti',
         'bukti.*' => 'berkas bukti',
     ];
 
@@ -61,7 +64,7 @@ class PortofolioController extends Controller
         $data = $request->validate(self::ATURAN, [], self::NAMA_ATRIBUT);
 
         $portofolio = $mahasiswa->portofolio()->create([
-            ...collect($data)->except('bukti')->all(),
+            ...collect($data)->except(['bukti', 'tautan'])->all(),
             'is_publik' => $request->boolean('is_publik'),
             'status' => 'draft',
         ]);
@@ -108,7 +111,7 @@ class PortofolioController extends Controller
         $data = $request->validate(self::ATURAN, [], self::NAMA_ATRIBUT);
 
         $portofolio->update([
-            ...collect($data)->except('bukti')->all(),
+            ...collect($data)->except(['bukti', 'tautan'])->all(),
             'is_publik' => $request->boolean('is_publik'),
         ]);
 
@@ -130,7 +133,9 @@ class PortofolioController extends Controller
             'Entri yang sudah diajukan atau diverifikasi tidak dapat dihapus.');
 
         foreach ($portofolio->bukti as $bukti) {
-            Storage::disk('local')->delete($bukti->path_file);
+            if ($bukti->sumber === 'berkas' && $bukti->path_file) {
+                Storage::disk('local')->delete($bukti->path_file);
+            }
         }
 
         $portofolio->delete();
@@ -167,13 +172,19 @@ class PortofolioController extends Controller
             'Bukti hanya dapat ditambah saat entri masih dapat diubah.');
 
         $request->validate([
-            'bukti' => ['required', 'array', 'min:1', 'max:5'],
+            'tautan' => ['nullable', 'array', 'max:10'],
+            'tautan.*' => ['nullable', 'url', 'max:1000'],
+            'bukti' => ['nullable', 'array', 'max:5'],
             'bukti.*' => ['file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
-        ], [], ['bukti.*' => 'berkas bukti']);
+        ], [], ['tautan.*' => 'tautan bukti', 'bukti.*' => 'berkas bukti']);
 
-        $this->simpanBukti($request, $portofolio);
+        $jumlah = $this->simpanBukti($request, $portofolio);
 
-        return back()->with('sukses', 'Bukti berhasil diunggah.');
+        if ($jumlah === 0) {
+            return back()->with('gagal', 'Tempelkan minimal satu tautan atau pilih berkas untuk diunggah.');
+        }
+
+        return back()->with('sukses', 'Bukti berhasil ditambahkan.');
     }
 
     public function hapusBukti(Request $request, Bukti $bukti)
@@ -185,7 +196,9 @@ class PortofolioController extends Controller
         abort_unless($portofolio->bisaDieditMahasiswa(), 403,
             'Bukti hanya dapat dihapus saat entri masih dapat diubah.');
 
-        Storage::disk('local')->delete($bukti->path_file);
+        if ($bukti->sumber === 'berkas' && $bukti->path_file) {
+            Storage::disk('local')->delete($bukti->path_file);
+        }
         $bukti->delete();
 
         return back()->with('sukses', 'Bukti dihapus.');
@@ -195,7 +208,7 @@ class PortofolioController extends Controller
     {
         if ($portofolio->bukti()->count() === 0) {
             return redirect()->route('portofolio.show', $portofolio)
-                ->with('gagal', 'Unggah minimal satu berkas bukti sebelum mengajukan verifikasi.');
+                ->with('gagal', 'Lampirkan minimal satu bukti (tautan atau berkas) sebelum mengajukan verifikasi.');
         }
 
         $portofolio->update(['status' => 'diajukan']);
@@ -204,18 +217,45 @@ class PortofolioController extends Controller
             ->with('sukses', 'Portofolio diajukan. Menunggu verifikasi dari prodi.');
     }
 
-    private function simpanBukti(Request $request, Portofolio $portofolio): void
+    /**
+     * Simpan bukti dari dua sumber: tautan URL (default, hemat server) dan berkas unggahan.
+     * Mengembalikan jumlah bukti yang berhasil ditambahkan.
+     */
+    private function simpanBukti(Request $request, Portofolio $portofolio): int
     {
+        $jumlah = 0;
+
+        foreach ($request->input('tautan', []) as $url) {
+            $url = trim((string) $url);
+            if ($url === '') {
+                continue;
+            }
+
+            $bukti = $portofolio->bukti()->make([
+                'sumber' => 'tautan',
+                'url' => $url,
+                'tipe_file' => 'tautan',
+                'uploaded_at' => now(),
+            ]);
+            $bukti->nama_file = 'Tautan '.$bukti->layanan();
+            $bukti->save();
+            $jumlah++;
+        }
+
         foreach ($request->file('bukti', []) as $file) {
             $path = $file->store('bukti/'.$portofolio->portofolio_id, 'local');
 
             $portofolio->bukti()->create([
+                'sumber' => 'berkas',
                 'nama_file' => $file->getClientOriginalName(),
                 'path_file' => $path,
                 'tipe_file' => $file->getMimeType(),
                 'uploaded_at' => now(),
             ]);
+            $jumlah++;
         }
+
+        return $jumlah;
     }
 
     private function pastikanPemilik(Request $request, Portofolio $portofolio): void

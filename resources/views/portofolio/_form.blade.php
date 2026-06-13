@@ -58,11 +58,9 @@
     </div>
 
     <div class="col-12">
-        <label class="form-label">Unggah Bukti (PDF/JPG/PNG, maks 5 MB per berkas, maks 5 berkas)</label>
-        <input type="file" name="bukti[]" class="form-control @error('bukti.*') is-invalid @enderror"
-               accept=".pdf,.jpg,.jpeg,.png" multiple>
-        @error('bukti.*')<div class="invalid-feedback">{{ $message }}</div>@enderror
-        <div class="form-hint">Bukti minimal satu berkas diperlukan sebelum entri dapat diajukan untuk verifikasi.</div>
+        <label class="form-label">Bukti Capaian</label>
+        @include('portofolio._input-bukti')
+        <div class="form-hint mt-2">Minimal satu bukti (tautan atau berkas) diperlukan sebelum entri dapat diajukan untuk verifikasi.</div>
     </div>
 
     <div class="col-12">

@@ -59,7 +59,7 @@
                         <div class="col-12 col-sm-6 col-lg-4">
                             <div class="d-flex align-items-center gap-2">
                                 <img src="{{ $logoAplikasi ? asset('storage/'.$logoAplikasi) : asset('favicon.svg') }}"
-                                     alt="Logo {{ $namaAplikasi }}" width="40" height="40" class="rounded">
+                                     alt="Logo {{ $namaAplikasi }}" class="rounded" style="height: 40px; width: auto;">
                                 <span class="fw-bold text-body">{{ $namaAplikasi }}</span>
                             </div>
                             <p class="text-secondary mt-3 mb-0">

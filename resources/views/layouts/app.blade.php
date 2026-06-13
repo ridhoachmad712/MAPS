@@ -24,7 +24,7 @@
 
             <a class="navbar-brand pe-lg-3" href="{{ route('dashboard') }}" title="{{ \App\Models\Setting::get('nama_aplikasi') }}">
                 <img src="{{ \App\Models\Setting::get('logo') ? asset('storage/'.\App\Models\Setting::get('logo')) : asset('favicon.svg') }}"
-                     alt="Logo {{ \App\Models\Setting::get('nama_aplikasi') }}" width="40" height="40" class="rounded">
+                     alt="Logo {{ \App\Models\Setting::get('nama_aplikasi') }}" class="rounded" style="height: 40px; width: auto;">
             </a>
 
             <div class="collapse navbar-collapse" id="menu-aplikasi">

@@ -47,10 +47,10 @@
                 <thead>
                     <tr>
                         <th>Judul</th>
-                        <th>Kategori</th>
-                        <th>Tahun</th>
-                        <th>Level</th>
-                        <th>Bukti</th>
+                        <th class="d-none d-md-table-cell">Kategori</th>
+                        <th class="d-none d-md-table-cell">Tahun</th>
+                        <th class="d-none d-md-table-cell">Level</th>
+                        <th class="d-none d-lg-table-cell">Bukti</th>
                         <th>Status</th>
                         <th>Publik</th>
                         <th class="text-end">Aksi</th>
@@ -62,10 +62,10 @@
                             <td>
                                 <a href="{{ route('portofolio.show', $p) }}" class="fw-semibold">{{ $p->judul }}</a>
                             </td>
-                            <td><span class="badge bg-secondary-lt">{{ $p->kategori->kode }}</span></td>
-                            <td>{{ $p->tahun_pencapaian }}</td>
-                            <td><span class="badge bg-{{ $p->levelBadge() }}-lt">{{ $p->levelLabel() }}</span></td>
-                            <td>{{ $p->bukti->count() }} berkas</td>
+                            <td class="d-none d-md-table-cell"><span class="badge bg-secondary-lt">{{ $p->kategori->kode }}</span></td>
+                            <td class="d-none d-md-table-cell">{{ $p->tahun_pencapaian }}</td>
+                            <td class="d-none d-md-table-cell"><span class="badge bg-{{ $p->levelBadge() }}-lt">{{ $p->levelLabel() }}</span></td>
+                            <td class="d-none d-lg-table-cell">{{ $p->bukti->count() }} berkas</td>
                             <td><span class="badge bg-{{ $p->statusBadge() }}-lt">{{ $p->statusLabel() }}</span></td>
                             <td>
                                 @if ($p->is_publik)

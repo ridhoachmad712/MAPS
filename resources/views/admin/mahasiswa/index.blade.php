@@ -48,11 +48,11 @@
                     <tr>
                         <th>NIM</th>
                         <th>Nama Lengkap</th>
-                        <th>Angkatan</th>
-                        <th>Email</th>
-                        <th>Konsen Publik</th>
-                        <th>Status Akun</th>
-                        <th class="text-end">Capaian Terverifikasi</th>
+                        <th class="d-none d-md-table-cell">Angkatan</th>
+                        <th class="d-none d-lg-table-cell">Email</th>
+                        <th class="d-none d-lg-table-cell">Konsen Publik</th>
+                        <th class="d-none d-md-table-cell">Status Akun</th>
+                        <th class="d-none d-md-table-cell text-end">Capaian Terverifikasi</th>
                         <th class="text-end">Aksi</th>
                     </tr>
                 </thead>
@@ -61,23 +61,23 @@
                         <tr>
                             <td>{{ $m->nim }}</td>
                             <td class="fw-semibold">{{ $m->nama_lengkap }}</td>
-                            <td>{{ $m->angkatan }}</td>
-                            <td class="small">{{ $m->user->email ?? '—' }}</td>
-                            <td>
+                            <td class="d-none d-md-table-cell">{{ $m->angkatan }}</td>
+                            <td class="d-none d-lg-table-cell small">{{ $m->user->email ?? '—' }}</td>
+                            <td class="d-none d-lg-table-cell">
                                 @if ($m->konsen_publik)
                                     <span class="badge bg-success-lt">Setuju</span>
                                 @else
                                     <span class="badge bg-secondary-lt">Tidak</span>
                                 @endif
                             </td>
-                            <td>
+                            <td class="d-none d-md-table-cell">
                                 @if ($m->user?->is_active)
                                     <span class="badge bg-success-lt">Aktif</span>
                                 @else
                                     <span class="badge bg-danger-lt">Nonaktif</span>
                                 @endif
                             </td>
-                            <td class="text-end"><span class="badge bg-success-lt">{{ $m->total_terverifikasi }}</span></td>
+                            <td class="d-none d-md-table-cell text-end"><span class="badge bg-success-lt">{{ $m->total_terverifikasi }}</span></td>
                             <td>
                                 <div class="d-flex justify-content-end gap-1">
                                     <a href="{{ route('admin.mahasiswa.edit', $m) }}" class="btn btn-sm btn-outline-primary btn-icon" title="Ubah">

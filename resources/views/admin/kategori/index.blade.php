@@ -53,7 +53,7 @@
                     <tr>
                         <th style="width: 6rem;">Kode</th>
                         <th>Nama Kategori</th>
-                        <th>Deskripsi</th>
+                        <th class="d-none d-md-table-cell">Deskripsi</th>
                         <th class="text-end">Jumlah Entri</th>
                         <th class="text-end" style="width: 8rem;">Aksi</th>
                     </tr>
@@ -63,7 +63,7 @@
                         <tr>
                             <td><span class="badge bg-primary text-primary-fg">{{ $k->kode }}</span></td>
                             <td class="fw-semibold">{{ $k->nama_kategori }}</td>
-                            <td class="text-secondary small">{{ $k->deskripsi }}</td>
+                            <td class="d-none d-md-table-cell text-secondary small">{{ $k->deskripsi }}</td>
                             <td class="text-end">{{ $k->portofolio_count }}</td>
                             <td>
                                 <div class="d-flex justify-content-end gap-1">

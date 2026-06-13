@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Support\GambarUnggahan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -31,7 +32,7 @@ class ProfilController extends Controller
             if ($mahasiswa->foto) {
                 Storage::disk('public')->delete($mahasiswa->foto);
             }
-            $data['foto'] = $request->file('foto')->store('foto', 'public');
+            $data['foto'] = GambarUnggahan::simpan($request->file('foto'), 'foto', 400);
         }
 
         $mahasiswa->update($data);

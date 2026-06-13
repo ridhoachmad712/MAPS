@@ -28,6 +28,12 @@
     @stack('head')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @include('partials.tema')
+    <script>
+        // Terapkan tema tersimpan sebelum halaman digambar (hindari kedipan)
+        if (localStorage.getItem('tema') === 'gelap') {
+            document.documentElement.setAttribute('data-bs-theme', 'dark');
+        }
+    </script>
     @stack('css')
 </head>
 <body>
@@ -46,7 +52,8 @@
             {{-- Footer tiga kolom (warna & isi dari pengaturan) — halaman dapat mematikannya lewat @section('tanpa_footer', '1') --}}
             @hasSection('tanpa_footer')
             @else
-            <footer class="footer footer-maps d-print-none" data-bs-theme="{{ $footerTerang ? 'light' : 'dark' }}">
+            <footer class="footer footer-maps d-print-none" data-bs-theme="{{ $footerTerang ? 'light' : 'dark' }}"
+                    data-tema-terang="{{ $footerTerang ? 'light' : 'dark' }}">
                 <div class="container-xl">
                     <div class="row gy-4 py-3">
                         <div class="col-12 col-sm-6 col-lg-4">
@@ -110,6 +117,21 @@
                 tombol.classList.toggle('d-none', window.scrollY <= 600);
             }, { passive: true });
             tombol.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+            // Mode gelap: ganti tema halaman + elemen berwarna pengaturan (navbar/footer)
+            const aturTema = (gelap) => {
+                document.documentElement.setAttribute('data-bs-theme', gelap ? 'dark' : 'light');
+                document.querySelectorAll('[data-tema-terang]').forEach((el) => {
+                    el.setAttribute('data-bs-theme', gelap ? 'dark' : el.dataset.temaTerang);
+                });
+                localStorage.setItem('tema', gelap ? 'gelap' : 'terang');
+            };
+
+            if (localStorage.getItem('tema') === 'gelap') aturTema(true);
+
+            document.querySelectorAll('.tombol-tema').forEach((t) => t.addEventListener('click', () => {
+                aturTema(document.documentElement.getAttribute('data-bs-theme') !== 'dark');
+            }));
         })();
     </script>
 

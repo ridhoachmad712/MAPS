@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
+use App\Support\GambarUnggahan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PengaturanAdminController extends Controller
 {
@@ -77,10 +79,18 @@ class PengaturanAdminController extends Controller
             }
 
             if (in_array($kunci, self::BERKAS)) {
+                $lama = Setting::get($kunci);
+
                 if ($request->hasFile($kunci)) {
-                    Setting::set($kunci, $request->file($kunci)->store('pengaturan', 'public'));
+                    // Logo cukup 512px; foto hero dibatasi 1920px agar ringan
+                    $maksSisi = $kunci === 'hero_foto' ? 1920 : 512;
+                    Setting::set($kunci, GambarUnggahan::simpan($request->file($kunci), 'pengaturan', $maksSisi));
                 } elseif ($request->boolean('hapus_'.$kunci)) {
                     Setting::set($kunci, '');
+                }
+
+                if ($lama !== '' && $lama !== Setting::get($kunci)) {
+                    Storage::disk('public')->delete($lama);
                 }
 
                 continue;

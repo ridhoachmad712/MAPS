@@ -109,8 +109,8 @@
                     <tr>
                         <th>#</th>
                         <th>Nama</th>
-                        <th>NIM</th>
-                        <th>Angkatan</th>
+                        <th class="d-none d-sm-table-cell">NIM</th>
+                        <th class="d-none d-sm-table-cell">Angkatan</th>
                         <th class="text-end">Capaian Terverifikasi</th>
                     </tr>
                 </thead>
@@ -119,8 +119,8 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td class="fw-semibold">{{ $m->nama_lengkap }}</td>
-                            <td>{{ $m->nim }}</td>
-                            <td>{{ $m->angkatan }}</td>
+                            <td class="d-none d-sm-table-cell">{{ $m->nim }}</td>
+                            <td class="d-none d-sm-table-cell">{{ $m->angkatan }}</td>
                             <td class="text-end"><span class="badge bg-success-lt">{{ $m->total_terverifikasi }}</span></td>
                         </tr>
                     @empty

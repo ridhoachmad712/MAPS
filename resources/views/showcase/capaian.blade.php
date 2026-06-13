@@ -164,7 +164,7 @@
                                 <tr>
                                     <th>Capaian</th>
                                     <th>Mahasiswa</th>
-                                    <th>Kategori</th>
+                                    <th class="d-none d-md-table-cell">Kategori</th>
                                     <th>
                                         <a href="{{ request()->fullUrlWithQuery(['urut' => $urut === 'level_turun' ? 'level_naik' : 'level_turun', 'page' => null]) }}"
                                            class="d-inline-flex align-items-center gap-1 text-reset">
@@ -199,7 +199,7 @@
                                             <span class="fw-medium">{{ $p->mahasiswa->nama_lengkap }}</span>
                                             <div class="text-secondary small">{{ $p->mahasiswa->nimSamar() }} · {{ $p->mahasiswa->angkatan }}</div>
                                         </td>
-                                        <td><span class="badge bg-secondary-lt">{{ $p->kategori->kode }}</span></td>
+                                        <td class="d-none d-md-table-cell"><span class="badge bg-secondary-lt">{{ $p->kategori->kode }}</span></td>
                                         <td><span class="badge bg-{{ $p->levelBadge() }}-lt">{{ $p->levelLabel() }}</span></td>
                                         <td class="text-end fw-medium">{{ $p->tahun_pencapaian }}</td>
                                     </tr>

@@ -14,7 +14,8 @@
 @endphp
 
 @section('navbar')
-    <header class="navbar navbar-expand-lg navbar-maps sticky-top d-print-none" data-bs-theme="{{ $navbarTerang ? 'light' : 'dark' }}">
+    <header class="navbar navbar-expand-lg navbar-maps sticky-top d-print-none" data-bs-theme="{{ $navbarTerang ? 'light' : 'dark' }}"
+            data-tema-terang="{{ $navbarTerang ? 'light' : 'dark' }}">
         <div class="container-xl">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu-aplikasi"
                     aria-controls="menu-aplikasi" aria-expanded="false" aria-label="Buka menu">
@@ -98,6 +99,10 @@
 
                 @php $namaAkun = auth()->user()->mahasiswa->nama_lengkap ?? auth()->user()->username; @endphp
                 <div class="d-flex align-items-center gap-2 ms-lg-auto my-2 my-lg-0">
+                    <button type="button" class="btn btn-icon btn-ghost-secondary tombol-tema" aria-label="Ganti tema terang/gelap">
+                        <i class="bi bi-moon ikon-gelap"></i>
+                        <i class="bi bi-sun ikon-terang"></i>
+                    </button>
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link d-flex align-items-center lh-1 p-0" data-bs-toggle="dropdown"
                            aria-expanded="false" aria-label="Buka menu akun">

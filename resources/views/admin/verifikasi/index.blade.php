@@ -25,11 +25,11 @@
                     <tr>
                         <th>Mahasiswa</th>
                         <th>Judul</th>
-                        <th>Kategori</th>
-                        <th>Tahun</th>
-                        <th>Level</th>
-                        <th>Bukti</th>
-                        <th>Diajukan</th>
+                        <th class="d-none d-lg-table-cell">Kategori</th>
+                        <th class="d-none d-md-table-cell">Tahun</th>
+                        <th class="d-none d-md-table-cell">Level</th>
+                        <th class="d-none d-lg-table-cell">Bukti</th>
+                        <th class="d-none d-lg-table-cell">Diajukan</th>
                         <th class="text-end">Aksi</th>
                     </tr>
                 </thead>
@@ -41,11 +41,11 @@
                                 <div class="text-secondary small">{{ $p->mahasiswa->nim }} · {{ $p->mahasiswa->angkatan }}</div>
                             </td>
                             <td>{{ $p->judul }}</td>
-                            <td><span class="badge bg-secondary-lt">{{ $p->kategori->kode }}</span></td>
-                            <td>{{ $p->tahun_pencapaian }}</td>
-                            <td><span class="badge bg-{{ $p->levelBadge() }}-lt">{{ $p->levelLabel() }}</span></td>
-                            <td>{{ $p->bukti->count() }} berkas</td>
-                            <td class="text-secondary small">{{ $p->updated_at->format('d/m/Y') }}</td>
+                            <td class="d-none d-lg-table-cell"><span class="badge bg-secondary-lt">{{ $p->kategori->kode }}</span></td>
+                            <td class="d-none d-md-table-cell">{{ $p->tahun_pencapaian }}</td>
+                            <td class="d-none d-md-table-cell"><span class="badge bg-{{ $p->levelBadge() }}-lt">{{ $p->levelLabel() }}</span></td>
+                            <td class="d-none d-lg-table-cell">{{ $p->bukti->count() }} berkas</td>
+                            <td class="d-none d-lg-table-cell text-secondary small">{{ $p->updated_at->format('d/m/Y') }}</td>
                             <td>
                                 <div class="d-flex justify-content-end">
                                     <a href="{{ route('admin.verifikasi.show', $p) }}" class="btn btn-sm btn-primary">

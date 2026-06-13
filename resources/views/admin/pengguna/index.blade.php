@@ -59,10 +59,10 @@
                 <thead>
                     <tr>
                         <th>Nama Pengguna</th>
-                        <th>Email</th>
+                        <th class="d-none d-md-table-cell">Email</th>
                         <th>Peran</th>
                         <th>Status</th>
-                        <th>Dibuat</th>
+                        <th class="d-none d-lg-table-cell">Dibuat</th>
                         <th class="text-end">Aksi</th>
                     </tr>
                 </thead>
@@ -70,7 +70,7 @@
                     @foreach ($pengguna as $u)
                         <tr>
                             <td class="fw-semibold">{{ $u->username }}</td>
-                            <td>{{ $u->email }}</td>
+                            <td class="d-none d-md-table-cell">{{ $u->email }}</td>
                             <td>
                                 <span class="badge {{ $u->role === 'admin' ? 'bg-primary text-primary-fg' : 'bg-info-lt' }} text-uppercase">{{ $u->role }}</span>
                             </td>
@@ -81,7 +81,7 @@
                                     <span class="badge bg-danger-lt">Nonaktif</span>
                                 @endif
                             </td>
-                            <td class="text-secondary small">{{ $u->created_at?->format('d/m/Y') }}</td>
+                            <td class="d-none d-lg-table-cell text-secondary small">{{ $u->created_at?->format('d/m/Y') }}</td>
                             <td>
                                 <div class="d-flex justify-content-end gap-1">
                                     <button class="btn btn-sm btn-outline-secondary btn-icon" data-bs-toggle="modal"

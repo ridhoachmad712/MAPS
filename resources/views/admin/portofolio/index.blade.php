@@ -83,11 +83,11 @@
                     <tr>
                         <th>Mahasiswa</th>
                         <th>Judul</th>
-                        <th>Kategori</th>
-                        <th>Tahun</th>
-                        <th>Level</th>
+                        <th class="d-none d-md-table-cell">Kategori</th>
+                        <th class="d-none d-md-table-cell">Tahun</th>
+                        <th class="d-none d-md-table-cell">Level</th>
                         <th>Status</th>
-                        <th>Publik</th>
+                        <th class="d-none d-sm-table-cell">Publik</th>
                         <th class="text-end">Aksi</th>
                     </tr>
                 </thead>
@@ -99,11 +99,11 @@
                                 <div class="text-secondary small">{{ $p->mahasiswa->nim }} · {{ $p->mahasiswa->angkatan }}</div>
                             </td>
                             <td>{{ $p->judul }}</td>
-                            <td><span class="badge bg-secondary-lt">{{ $p->kategori->kode }}</span></td>
-                            <td>{{ $p->tahun_pencapaian }}</td>
-                            <td><span class="badge bg-{{ $p->levelBadge() }}-lt">{{ $p->levelLabel() }}</span></td>
+                            <td class="d-none d-md-table-cell"><span class="badge bg-secondary-lt">{{ $p->kategori->kode }}</span></td>
+                            <td class="d-none d-md-table-cell">{{ $p->tahun_pencapaian }}</td>
+                            <td class="d-none d-md-table-cell"><span class="badge bg-{{ $p->levelBadge() }}-lt">{{ $p->levelLabel() }}</span></td>
                             <td><span class="badge bg-{{ $p->statusBadge() }}-lt">{{ $p->statusLabel() }}</span></td>
-                            <td>
+                            <td class="d-none d-sm-table-cell">
                                 @if ($p->is_publik && $p->mahasiswa->konsen_publik && in_array($p->status, ['diverifikasi', 'dipublikasikan']))
                                     <i class="bi bi-eye-fill text-success" title="Tampil di showcase"></i>
                                 @else

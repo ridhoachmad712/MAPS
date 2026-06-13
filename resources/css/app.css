@@ -61,3 +61,23 @@
 .footer-maps {
     background: var(--warna-footer, transparent);
 }
+
+/* Mode gelap: navbar/footer mengikuti permukaan gelap Tabler,
+   mengabaikan warna terang dari pengaturan */
+[data-bs-theme='dark'] .navbar-maps,
+[data-bs-theme='dark'] .footer-maps {
+    background: var(--tblr-bg-surface);
+}
+
+/* Ikon tombol tema: bulan saat terang, matahari saat gelap */
+.tombol-tema .ikon-terang {
+    display: none;
+}
+
+[data-bs-theme='dark'] .tombol-tema .ikon-gelap {
+    display: none;
+}
+
+[data-bs-theme='dark'] .tombol-tema .ikon-terang {
+    display: inline-block;
+}

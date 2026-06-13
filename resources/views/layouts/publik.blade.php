@@ -12,7 +12,8 @@
 @endphp
 
 @section('navbar')
-    <header class="navbar navbar-expand-md navbar-maps sticky-top d-print-none" data-bs-theme="{{ $navbarTerang ? 'light' : 'dark' }}">
+    <header class="navbar navbar-expand-md navbar-maps sticky-top d-print-none" data-bs-theme="{{ $navbarTerang ? 'light' : 'dark' }}"
+            data-tema-terang="{{ $navbarTerang ? 'light' : 'dark' }}">
         <div class="container-xl">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu-publik"
                     aria-controls="menu-publik" aria-expanded="false" aria-label="Buka menu">
@@ -35,11 +36,15 @@
                         </li>
                     @endforeach
                 </ul>
-                <div class="ms-md-3 my-2 my-md-0">
+                <div class="d-flex align-items-center gap-2 ms-md-3 my-2 my-md-0">
+                    <button type="button" class="btn btn-icon btn-ghost-secondary tombol-tema" aria-label="Ganti tema terang/gelap">
+                        <i class="bi bi-moon ikon-gelap"></i>
+                        <i class="bi bi-sun ikon-terang"></i>
+                    </button>
                     @auth
-                        <a class="btn btn-primary w-100" href="{{ route('dashboard') }}"><i class="bi bi-speedometer2 me-1"></i>Dasbor</a>
+                        <a class="btn btn-primary flex-fill" href="{{ route('dashboard') }}"><i class="bi bi-speedometer2 me-1"></i>Dasbor</a>
                     @else
-                        <a class="btn btn-primary w-100" href="{{ route('login') }}"><i class="bi bi-box-arrow-in-right me-1"></i>Masuk</a>
+                        <a class="btn btn-primary flex-fill" href="{{ route('login') }}"><i class="bi bi-box-arrow-in-right me-1"></i>Masuk</a>
                     @endauth
                 </div>
             </div>

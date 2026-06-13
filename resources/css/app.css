@@ -28,6 +28,14 @@
     --tblr-btn-active-bg: var(--primer-600, var(--tblr-primary));
 }
 
+/* Batalkan kompensasi scrollbar Tabler (margin-left selebar scrollbar
+   pada layar >=992px) — membuat gap putih di kiri halaman sehingga
+   navbar & hero tidak full-bleed. */
+:root {
+    margin-left: 0;
+    margin-right: 0;
+}
+
 /* Konten menempel rapat ke navbar — hero beranda tampil full-bleed.
    Jarak vertikal diatur per halaman lewat py-* pada container. */
 .page-body {

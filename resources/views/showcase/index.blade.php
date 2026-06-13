@@ -251,7 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
     new Chart(document.getElementById('grafikAngkatan'), {
         type: 'bar',
         data: {
-            labels: @json($perAngkatan->keys()->map(fn ($a) => 'Angkatan '.$a)),
+            labels: @json($perAngkatan->keys()->map(fn ($a) => (string) $a)),
             datasets: [{
                 data: @json($perAngkatan->values()),
                 backgroundColor: warnaPrimerMuda,

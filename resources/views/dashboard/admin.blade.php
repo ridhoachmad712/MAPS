@@ -160,6 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
         scales: { y: { beginAtZero: true, ticks: { precision: 0 } } },
     };
 
+    // Bar horizontal: nama kategori panjang tampil utuh tanpa dimiringkan
     new Chart(document.getElementById('grafikKategori'), {
         type: 'bar',
         data: {
@@ -171,7 +172,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 borderRadius: 6,
             }],
         },
-        options: opsiRingkas,
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false }, tooltip: tooltipMaps },
+            scales: { x: { beginAtZero: true, ticks: { precision: 0 } } },
+        },
     });
 
     new Chart(document.getElementById('grafikLevel'), {
@@ -196,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
     new Chart(document.getElementById('grafikAngkatan'), {
         type: 'bar',
         data: {
-            labels: @json($perAngkatan->keys()->map(fn ($a) => 'Angkatan '.$a)),
+            labels: @json($perAngkatan->keys()->map(fn ($a) => (string) $a)),
             datasets: [{
                 label: 'Capaian terverifikasi',
                 data: @json($perAngkatan->values()),

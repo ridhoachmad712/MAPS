@@ -21,13 +21,9 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <a class="navbar-brand d-flex align-items-center gap-2 pe-lg-3" href="{{ route('dashboard') }}">
+            <a class="navbar-brand pe-lg-3" href="{{ route('dashboard') }}" title="{{ \App\Models\Setting::get('nama_aplikasi') }}">
                 <img src="{{ \App\Models\Setting::get('logo') ? asset('storage/'.\App\Models\Setting::get('logo')) : asset('favicon.svg') }}"
                      alt="Logo {{ \App\Models\Setting::get('nama_aplikasi') }}" width="40" height="40" class="rounded">
-                <span class="lh-sm">
-                    <span class="d-block fw-bold">{{ \App\Models\Setting::get('nama_aplikasi') }}</span>
-                    <span class="d-block fs-5 text-secondary">{{ \App\Models\Setting::get('nama_pemilik') }}</span>
-                </span>
             </a>
 
             <div class="collapse navbar-collapse" id="menu-aplikasi">

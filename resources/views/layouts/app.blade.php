@@ -97,24 +97,25 @@
                 </ul>
 
                 @php $namaAkun = auth()->user()->mahasiswa->nama_lengkap ?? auth()->user()->username; @endphp
-                <div class="nav-item dropdown ms-lg-auto my-2 my-lg-0">
-                    <a href="#" class="nav-link d-flex align-items-center lh-1 p-0" data-bs-toggle="dropdown"
-                       aria-expanded="false" aria-label="Buka menu akun">
-                        <span class="avatar avatar-sm">{{ strtoupper(substr($namaAkun, 0, 1)) }}</span>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-end">
-                        <div class="dropdown-item-text">
-                            <div class="fw-semibold">{{ $namaAkun }}</div>
-                            <div class="text-secondary text-uppercase small">{{ auth()->user()->role }}</div>
+                <div class="d-flex align-items-center gap-2 ms-lg-auto my-2 my-lg-0">
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link d-flex align-items-center lh-1 p-0" data-bs-toggle="dropdown"
+                           aria-expanded="false" aria-label="Buka menu akun">
+                            <span class="avatar avatar-sm">{{ strtoupper(substr($namaAkun, 0, 1)) }}</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end">
+                            <div class="dropdown-item-text">
+                                <div class="fw-semibold">{{ $namaAkun }}</div>
+                                <div class="text-secondary text-uppercase small">{{ auth()->user()->role }}</div>
+                            </div>
                         </div>
-                        <div class="dropdown-divider"></div>
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button class="dropdown-item">
-                                <i class="bi bi-box-arrow-right me-2"></i>Keluar
-                            </button>
-                        </form>
                     </div>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-box-arrow-right me-1"></i>Keluar
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>

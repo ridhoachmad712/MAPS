@@ -6,7 +6,9 @@ use App\Http\Controllers\Admin\PengaturanAdminController;
 use App\Http\Controllers\Admin\PenggunaAdminController;
 use App\Http\Controllers\Admin\PortofolioAdminController;
 use App\Http\Controllers\Admin\VerifikasiController;
+use App\Http\Controllers\Admin\PendaftaranController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\BuktiController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PortofolioController;
@@ -40,6 +42,10 @@ Route::get('/bukti/{bukti}', [BuktiController::class, 'show'])->name('bukti.show
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->middleware('throttle:10,1')->name('login.attempt');
 Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth')->name('logout');
+
+// Pendaftaran mandiri mahasiswa (akun menunggu persetujuan admin)
+Route::get('/daftar', [RegisterController::class, 'showForm'])->name('register');
+Route::post('/daftar', [RegisterController::class, 'register'])->middleware('throttle:10,1')->name('register.submit');
 
 /*
 |--------------------------------------------------------------------------
@@ -93,6 +99,10 @@ Route::middleware(['auth', 'role:admin,verifikator'])->prefix('admin')->name('ad
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::post('/portofolio/{portofolio}/publikasikan', [VerifikasiController::class, 'publikasikan'])->name('portofolio.publikasikan');
     Route::post('/portofolio/{portofolio}/batalkan-publikasi', [VerifikasiController::class, 'batalkanPublikasi'])->name('portofolio.batalkan');
+
+    Route::get('/pendaftaran', [PendaftaranController::class, 'index'])->name('pendaftaran.index');
+    Route::post('/pendaftaran/{pengguna}/setujui', [PendaftaranController::class, 'setujui'])->name('pendaftaran.setujui');
+    Route::post('/pendaftaran/{pengguna}/tolak', [PendaftaranController::class, 'tolak'])->name('pendaftaran.tolak');
 
     Route::get('/mahasiswa-import', [MahasiswaAdminController::class, 'importForm'])->name('mahasiswa.import.form');
     Route::post('/mahasiswa-import', [MahasiswaAdminController::class, 'import'])->name('mahasiswa.import');

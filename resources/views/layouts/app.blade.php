@@ -10,7 +10,10 @@
 
 @php
     $navbarTerang = \App\Support\PaletWarna::terang(\App\Models\Setting::get('warna_navbar'));
-    $dataMasterAktif = request()->routeIs('admin.mahasiswa.*', 'admin.kategori.*', 'admin.pengguna.*', 'admin.pengaturan.*');
+    $dataMasterAktif = request()->routeIs('admin.mahasiswa.*', 'admin.kategori.*', 'admin.pengguna.*', 'admin.pendaftaran.*', 'admin.pengaturan.*');
+    $jumlahPendaftaran = auth()->user()->isAdmin()
+        ? \App\Models\User::where('role', 'mahasiswa')->where('status_pendaftaran', 'menunggu')->count()
+        : 0;
 @endphp
 
 @section('navbar')
@@ -65,10 +68,21 @@
                         @if (auth()->user()->isAdmin())
                             <li class="nav-item dropdown {{ $dataMasterAktif ? 'active' : '' }}">
                                 <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" role="button" aria-expanded="false">
-                                    <span class="nav-link-icon"><i class="bi bi-gear"></i></span>
+                                    <span class="nav-link-icon position-relative">
+                                        <i class="bi bi-gear"></i>
+                                        @if ($jumlahPendaftaran > 0)
+                                            <span class="badge bg-red position-absolute top-0 start-100 translate-middle p-1 rounded-circle"></span>
+                                        @endif
+                                    </span>
                                     <span class="nav-link-title">Data Master</span>
                                 </a>
                                 <div class="dropdown-menu">
+                                    <a class="dropdown-item {{ request()->routeIs('admin.pendaftaran.*') ? 'active' : '' }}" href="{{ route('admin.pendaftaran.index') }}">
+                                        <i class="bi bi-person-plus me-2"></i>Pendaftaran
+                                        @if ($jumlahPendaftaran > 0)
+                                            <span class="badge bg-red text-white ms-2">{{ $jumlahPendaftaran }}</span>
+                                        @endif
+                                    </a>
                                     <a class="dropdown-item {{ request()->routeIs('admin.mahasiswa.*') ? 'active' : '' }}" href="{{ route('admin.mahasiswa.index') }}">
                                         <i class="bi bi-people me-2"></i>Mahasiswa
                                     </a>

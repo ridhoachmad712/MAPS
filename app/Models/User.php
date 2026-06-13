@@ -22,6 +22,7 @@ class User extends Authenticatable
         'password_hash',
         'role',
         'is_active',
+        'status_pendaftaran',
     ];
 
     protected $hidden = [
@@ -68,5 +69,15 @@ class User extends Authenticatable
     public function isMahasiswa(): bool
     {
         return $this->role === 'mahasiswa';
+    }
+
+    public function menungguPersetujuan(): bool
+    {
+        return $this->status_pendaftaran === 'menunggu';
+    }
+
+    public function pendaftaranDitolak(): bool
+    {
+        return $this->status_pendaftaran === 'ditolak';
     }
 }

@@ -50,7 +50,7 @@
         </div>
 
         <p class="text-center text-secondary mt-3 mb-0">
-            Belum punya akun? Hubungi admin prodi untuk pendaftaran.
+            Belum punya akun? <a href="{{ route('register') }}">Daftar sebagai mahasiswa</a>
         </p>
     </div>
 @endsection

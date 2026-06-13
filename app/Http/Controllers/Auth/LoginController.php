@@ -40,6 +40,22 @@ class LoginController extends Controller
         $field = filter_var($request->input('username'), FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
         $user = User::where($field, $request->input('username'))->first();
 
+        if ($user && $user->menungguPersetujuan()) {
+            RateLimiter::hit($throttleKey, 60);
+
+            throw ValidationException::withMessages([
+                'username' => 'Akun Anda masih menunggu persetujuan admin prodi.',
+            ]);
+        }
+
+        if ($user && $user->pendaftaranDitolak()) {
+            RateLimiter::hit($throttleKey, 60);
+
+            throw ValidationException::withMessages([
+                'username' => 'Pendaftaran Anda ditolak. Hubungi admin prodi.',
+            ]);
+        }
+
         if ($user && ! $user->is_active) {
             RateLimiter::hit($throttleKey, 60);
 

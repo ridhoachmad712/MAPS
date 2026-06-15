@@ -37,11 +37,11 @@
                     <label class="form-label">Tagline</label>
                     <input type="text" name="tagline" maxlength="150" class="form-control" value="{{ old('tagline', $nilai['tagline']) }}">
                 </div>
-                <div class="col-12">
+                <div class="col-12 col-md-8">
                     <label class="form-label">Logo</label>
                     @if ($nilai['logo'])
                         <div class="d-flex align-items-center gap-3 mb-2">
-                            <img src="{{ asset('storage/'.$nilai['logo']) }}" alt="Logo saat ini" width="48" height="48" class="rounded border">
+                            <img src="{{ asset('storage/'.$nilai['logo']) }}" alt="Logo saat ini" style="height: 48px; width: auto;" class="border">
                             <label class="form-check mb-0">
                                 <input class="form-check-input" type="checkbox" name="hapus_logo" value="1">
                                 <span class="form-check-label">Hapus logo, pakai logo bawaan berwarna tema</span>
@@ -51,6 +51,13 @@
                     <input type="file" name="logo" class="form-control @error('logo') is-invalid @enderror" accept=".png,.jpg,.jpeg,.svg,.webp">
                     @error('logo')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     <div class="form-hint">PNG/JPG/SVG maks 2 MB. Kosongkan untuk mempertahankan logo saat ini.</div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <label class="form-label">Lebar Logo Header (px)</label>
+                    <input type="number" name="lebar_logo" min="20" max="400" placeholder="otomatis"
+                           class="form-control @error('lebar_logo') is-invalid @enderror" value="{{ old('lebar_logo', $nilai['lebar_logo']) }}">
+                    @error('lebar_logo')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                    <div class="form-hint">Kosongkan untuk ukuran otomatis (tinggi 25px, lebar mengikuti rasio).</div>
                 </div>
             </div>
         </div>

@@ -20,9 +20,11 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
 
+            @php $lebarLogo = \App\Models\Setting::get('lebar_logo'); @endphp
             <a class="navbar-brand pe-md-3" href="{{ route('showcase.index') }}" title="{{ \App\Models\Setting::get('nama_aplikasi') }}">
                 <img src="{{ \App\Models\Setting::get('logo') ? asset('storage/'.\App\Models\Setting::get('logo')) : asset('favicon.svg') }}"
-                     alt="Logo {{ \App\Models\Setting::get('nama_aplikasi') }}" class="rounded" style="height: 25px; width: auto;">
+                     alt="Logo {{ \App\Models\Setting::get('nama_aplikasi') }}"
+                     style="{{ $lebarLogo ? "width: {$lebarLogo}px; height: auto; max-height: 56px;" : 'height: 25px; width: auto;' }}">
             </a>
 
             <div class="collapse navbar-collapse" id="menu-publik">

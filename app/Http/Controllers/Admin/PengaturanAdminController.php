@@ -30,6 +30,7 @@ class PengaturanAdminController extends Controller
             'tagline' => ['nullable', 'string', 'max:150'],
             'logo' => ['nullable', 'image', 'max:2048'],
             'hapus_logo' => ['nullable', 'boolean'],
+            'lebar_logo' => ['nullable', 'integer', 'min:20', 'max:400'],
 
             // Warna
             'warna_primer' => ['required', 'regex:/^#[0-9a-fA-F]{6}$/'],

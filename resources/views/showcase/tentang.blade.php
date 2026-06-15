@@ -9,7 +9,7 @@
 
         <div class="text-center">
             <img src="{{ \App\Models\Setting::get('logo') ? asset('storage/'.\App\Models\Setting::get('logo')) : asset('favicon.svg') }}"
-                 alt="Logo {{ \App\Models\Setting::get('nama_aplikasi') }}" class="rounded" style="height: 64px; width: auto;">
+                 alt="Logo {{ \App\Models\Setting::get('nama_aplikasi') }}" style="height: 64px; width: auto;">
             <h1 class="h1 mt-3 mb-1">Tentang {{ \App\Models\Setting::get('nama_aplikasi') }}</h1>
             <p class="text-secondary">{{ \App\Models\Setting::get('tagline') }}</p>
         </div>

@@ -23,6 +23,7 @@ class Setting extends Model
         'nama_pemilik' => 'Prodi Manajemen FEB UNM',
         'tagline' => 'Management Student Achievement Portfolio System',
         'logo' => '',
+        'lebar_logo' => '', // lebar logo header (px); kosong = otomatis (tinggi 25px)
 
         // Warna (bawaan mengikuti palet default Tabler)
         'warna_primer' => '#066fd1',

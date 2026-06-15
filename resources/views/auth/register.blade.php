@@ -14,7 +14,7 @@
         <div class="text-center mb-4">
             <a href="{{ route('showcase.index') }}" title="Kembali ke beranda">
                 <img src="{{ \App\Models\Setting::get('logo') ? asset('storage/'.\App\Models\Setting::get('logo')) : asset('favicon.svg') }}"
-                     alt="Logo {{ \App\Models\Setting::get('nama_aplikasi') }}" class="rounded" style="height: 56px; width: auto;">
+                     alt="Logo {{ \App\Models\Setting::get('nama_aplikasi') }}" style="height: 56px; width: auto;">
             </a>
         </div>
 

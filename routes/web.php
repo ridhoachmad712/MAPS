@@ -101,6 +101,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/portofolio/{portofolio}/batalkan-publikasi', [VerifikasiController::class, 'batalkanPublikasi'])->name('portofolio.batalkan');
 
     Route::get('/pendaftaran', [PendaftaranController::class, 'index'])->name('pendaftaran.index');
+    Route::post('/pendaftaran/setujui-semua', [PendaftaranController::class, 'setujuiSemua'])->name('pendaftaran.setujui-semua');
     Route::post('/pendaftaran/{pengguna}/setujui', [PendaftaranController::class, 'setujui'])->name('pendaftaran.setujui');
     Route::post('/pendaftaran/{pengguna}/tolak', [PendaftaranController::class, 'tolak'])->name('pendaftaran.tolak');
 

@@ -4,11 +4,22 @@
 
 @section('konten')
     <div class="page-header mb-4">
-        <div class="row align-items-center">
+        <div class="row align-items-center g-2">
             <div class="col">
                 <h2 class="page-title">Pendaftaran Mahasiswa</h2>
                 <p class="text-secondary mb-0">Tinjau akun mahasiswa yang mendaftar mandiri sebelum mereka dapat masuk.</p>
             </div>
+            @if ($pendaftar->total() > 0)
+                <div class="col-auto">
+                    <form method="POST" action="{{ route('admin.pendaftaran.setujui-semua') }}"
+                          onsubmit="return confirm('Setujui SEMUA {{ $pendaftar->total() }} pendaftaran yang menunggu? Seluruh mahasiswa tersebut akan langsung dapat masuk.')">
+                        @csrf
+                        <button class="btn btn-success">
+                            <i class="bi bi-check-all me-1"></i>Setujui Semua ({{ $pendaftar->total() }})
+                        </button>
+                    </form>
+                </div>
+            @endif
         </div>
     </div>
 
